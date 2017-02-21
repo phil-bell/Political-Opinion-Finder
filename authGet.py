@@ -10,3 +10,5 @@ def authentigate():
         redirect_url = auth.get_authorization_url()
     except:
         print("Authentication Failed!")
+
+    return api
