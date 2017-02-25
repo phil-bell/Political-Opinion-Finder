@@ -1,10 +1,43 @@
 import tweepy
+import codecs
+import pymongo
+from pymongo import MongoClient
+
+#imports local files
 import authGet
+import mongod
 
+
+#gets twitter api and mongo connection
 api = authGet.authentigate()
+db = mongodb.conn()
 
-public_tweet = api.home_timeline()
-for tweet in public_tweet:
-    out = tweet.text
-    print (out.encode("utf-8"))
 
+#gets random tweets as a test
+def pubTweets(api):
+    publicTweet = api.home_timeline()
+    for tweets in publicTweet:
+        out = tweets.text
+        print (out.decode("utf-8").encode('cp850','replace').decode('cp850'))
+
+    print ("======================================================")
+
+
+#gets tweets from hashtag "#brexit" and puts them in the mongo database
+def getTweets(api,db):
+    brexitTweets = tweepy.Cursor(api.search,q="#brexit").items(10)
+
+    for tweets in brexitTweets:
+        out = tweets.text
+        user = api.get_user("twitter")
+        #print ("\n",user.encode("utf-8"))
+        #print (out.encode("utf-8"))
+
+        results = db.tweets.insert_one(
+            {
+                "tweet":out
+            }
+        )
+
+        
+getTweets(api,db)
