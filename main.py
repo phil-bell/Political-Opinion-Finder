@@ -5,7 +5,7 @@ from pymongo import MongoClient
 
 #imports local files
 import authGet
-import mongod
+import mongodb
 
 
 #gets twitter api and mongo connection
@@ -25,16 +25,18 @@ def pubTweets(api):
 
 #gets tweets from hashtag "#brexit" and puts them in the mongo database
 def getTweets(api,db):
-    brexitTweets = tweepy.Cursor(api.search,q="#brexit").items(10)
+    brexitTweets = tweepy.Cursor(api.search,q="#brexit",show_user=True,locale=True).items(10)
 
     for tweets in brexitTweets:
         out = tweets.text
+        name = tweets.author.screen_name
         user = api.get_user("twitter")
         #print ("\n",user.encode("utf-8"))
-        #print (out.encode("utf-8"))
-
+        print ("Added: ",name,"-",out.encode("utf-8"))
+        
         results = db.tweets.insert_one(
             {
+                "username":name,
                 "tweet":out
             }
         )
