@@ -27,12 +27,11 @@ def pubTweets(api):
 def getTweets(api,db):
     brexitTweets = tweepy.Cursor(api.search,q="#brexit",show_user=True,locale=True).items(10)
 
+    #loops through the list of tweets
     for tweets in brexitTweets:
         out = tweets.text
         name = tweets.author.screen_name
-        user = api.get_user("twitter")
-        #print ("\n",user.encode("utf-8"))
-        print ("Added: ",name,"-",out.encode("utf-8"))
+        print ("\nAdded: ",name,"-",out.encode("utf-8")) #shows tweets being added to the DB
         
         results = db.tweets.insert_one(
             {
@@ -42,4 +41,4 @@ def getTweets(api,db):
         )
 
         
-getTweets(api,db)
+getTweets(api,db) #calls the function that gets tweets and puts them in the DB
