@@ -33,14 +33,27 @@ def getTweets(api,db):
 
     #loops through the list of tweets
     for tweets in brexitTweets:
+
         out = tweets.text
         name = tweets.author.screen_name
+        followers = []
+        friends = []
+
+        for user in tweepy.Cursor(api.followers, screen_name=name).items():
+            followers.append(users.screen_name)
+        
+        for user in tweepy.Cursor(api.friends, screen_name=name).items():
+            friends.append(user.screen_name)
+
         print ("\nAdded: ",name,"-",out.encode("utf-8")) #shows tweets being added to the DB
         
         results = db.tweets.insert_one(
             {
                 "username":name,
+                "followers":followers
+                "friends":friends
                 "tweet":out
+                
             }
         )
 
