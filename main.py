@@ -1,11 +1,11 @@
-# 
-#
-#
+# This is the main file, it gets tweets with the #brexit hashtag 
+# and puts them in a mongoDB with the tweet, username, who they
+# follows and who follows them.  
 
-import tweepy
-import codecs
-import pymongo
-from pymongo import MongoClient
+import tweepy #Twitter API library
+import codecs #encoding library for encodeding tweets in utf-8
+import pymongo #mongo library
+from pymongo import MongoClient #gets the mongo client method
 
 #imports local files
 import authGet
