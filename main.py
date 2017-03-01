@@ -39,13 +39,15 @@ def getTweets(api,db):
         followers = []
         friends = []
 
+        #gets the users followers and puts them in a list
         for user in tweepy.Cursor(api.followers, screen_name=name).items():
             followers.append(users.screen_name)
         
+        #gets the users following and puts them in the list
         for user in tweepy.Cursor(api.friends, screen_name=name).items():
             friends.append(user.screen_name)
 
-        print ("\nAdded: ",name,"-",out.encode("utf-8")) #shows tweets being added to the DB
+        print ("\n\nAdded: ","\n    Username: ",name,"\n    Followers: ",followers,"\n  Following",friends,"\n  Tweets:",out.encode("utf-8")) #shows tweets being added to the DB
         
         results = db.tweets.insert_one(
             {
