@@ -5,6 +5,7 @@
 import tweepy #Twitter API library
 import codecs #encoding library for encodeding tweets in utf-8
 import pymongo #mongo library
+import time
 from pymongo import MongoClient #gets the mongo client method
 
 #imports local files
@@ -26,34 +27,45 @@ def pubTweets(api):
 
     print ("======================================================")
 
+def limit_handler(cursor):
+    while True:
+        try:
+            yield cursor.next()
+        except tweepy.RateLimitError:
+            print ("Waiting...")
+            time.sleep(15)
 
 #gets tweets from hashtag "#brexit" and puts them in the mongo database
 def getTweets(api,db):
-    brexitTweets = tweepy.Cursor(api.search,q="#brexit",show_user=True,locale=True).items(10)
+    brexitTweets = tweepy.Cursor(api.search,q="#brexit",show_user=True,locale=True,wait_on_rate_limit=True).items()
 
-    #loops through the list of tweets
+    #loops through the list of tweetsco
     for tweets in brexitTweets:
 
         out = tweets.text
         name = tweets.author.screen_name
         followers = []
         friends = []
+        tmp = 0
 
         #gets the users followers and puts them in a list
-        for user in tweepy.Cursor(api.followers, screen_name=name).items():
+        for users in tweepy.Cursor(api.followers, screen_name=name,wait_on_rate_limit=True,wait_on_rate_limit_notify=True).items():
+            print ("Adding to followers list: ",users.screen_name)
             followers.append(users.screen_name)
         
         #gets the users following and puts them in the list
-        for user in tweepy.Cursor(api.friends, screen_name=name).items():
-            friends.append(user.screen_name)
+        for users in tweepy.Cursor(api.friends, screen_name=name,wait_on_rate_limit=True,wait_on_rate_limit_notify=True).items():
+            print ("Adding to friends list: ",users.screen_name)
+            friends.append(users.screen_name)
 
-        print ("\n\nAdded: ","\n    Username: ",name,"\n    Followers: ",followers,"\n  Following",friends,"\n  Tweets:",out.encode("utf-8")) #shows tweets being added to the DB
+        print ("\n\nAdded: ","\n    Username: ",name,"\n    Followers: ",followers,"\n    Following",friends,"\n    Tweets:",out.encode("utf-8")) #shows tweets being added to the DB
         
+        #adds the data to the database
         results = db.tweets.insert_one(
             {
                 "username":name,
-                "followers":followers
-                "friends":friends
+                "followers":followers,
+                "friends":friends,
                 "tweet":out
                 
             }
