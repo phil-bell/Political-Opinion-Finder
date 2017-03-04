@@ -49,14 +49,14 @@ def getTweets(api,db):
         tmp = 0
 
         #gets the users followers and puts them in a list
-        for users in tweepy.Cursor(api.followers, screen_name=name,wait_on_rate_limit=True,wait_on_rate_limit_notify=True).items():
-            print ("Adding to followers list: ",users.screen_name)
-            followers.append(users.screen_name)
+        #for users in tweepy.Cursor(api.followers, screen_name=name,wait_on_rate_limit=True,wait_on_rate_limit_notify=True).items():
+            #print ("Adding to followers list: ",users.screen_name)
+            #followers.append(users.screen_name)
         
         #gets the users following and puts them in the list
-        for users in tweepy.Cursor(api.friends, screen_name=name,wait_on_rate_limit=True,wait_on_rate_limit_notify=True).items():
-            print ("Adding to friends list: ",users.screen_name)
-            friends.append(users.screen_name)
+        #for users in tweepy.Cursor(api.friends, screen_name=name,wait_on_rate_limit=True,wait_on_rate_limit_notify=True).items():
+            #print ("Adding to friends list: ",users.screen_name)
+            #friends.append(users.screen_name)
 
         print ("\n\nAdded: ","\n    Username: ",name,"\n    Followers: ",followers,"\n    Following",friends,"\n    Tweets:",out.encode("utf-8")) #shows tweets being added to the DB
         
@@ -64,8 +64,8 @@ def getTweets(api,db):
         results = db.tweets.insert_one(
             {
                 "username":name,
-                "followers":followers,
-                "friends":friends,
+                #"followers":followers,
+                #"friends":friends,
                 "tweet":out
                 
             }
