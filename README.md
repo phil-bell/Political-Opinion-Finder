@@ -9,9 +9,9 @@ The motivation of this project is to investigate into the difference between pol
 ## Installation
 
 Clone the repositary then install the following Python libraries:
-* `Tweepy Twitter API library for accessing Twitter
-* `pymongo MongoDB library for using MongoDB
-* `codecs Encoding library for 
+* `Tweepy` Twitter API library for accessing Twitter
+* `pymongo` MongoDB library for using MongoDB
+* `codecs` Encoding library for 
 
 At this current stage in development the program requires a local MongoDB to be active (Please install from [MongoDB](https://www.mongodb.com/download-center?jmp=nav))
 
@@ -19,7 +19,7 @@ User must also create a JSON file with there [Twitter API](https://apps.twitter.
 
 ## Operation
 
-Simple run:
+Simple run in console/terminal:
 ``` 
 python ./main.py
 ```
