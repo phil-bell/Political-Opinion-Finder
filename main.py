@@ -10,63 +10,65 @@ import got3 #library that allows search for legacy tweets, written by Jefferson 
 from pymongo import MongoClient #gets the mongo client method
 
 #imports local files
-import authGet
-import mongodb
-import locGet
+from authGet import twitterAPI
+from mongodb import mongo
+from locGet import geo
 
 
 #gets twitter api and mongo connection
-api = authGet.authentigate()
-db = mongodb.conn()
 
-#gets tweets from hashtag "#brexit" and puts them in the mongo database
-def getTweets(api,db,hashtag):
+class Main:
+    def __init__(self,api,db):
+        self.api = api
+        self.db = db
 
-    #CVS for later: -8.23,49.93,1.74,60.84
-    #CVS RAW for later: -8.2287597656,49.9300081246,1.7358398437,60.8449105736
+    #gets tweets from hashtag "#brexit" and puts them in the mongo database
+    def getTweets(self,hashtag):
 
-    tweetCriteria = got3.manager.TweetCriteria().setQuerySearch(hashtag).setSince("2016-06-12").setUntil("2016-06-13").setMaxTweets(2)
-    brexitTweets = got3.manager.TweetManager.getTweets(tweetCriteria)
+        self.tweetCriteria = got3.manager.TweetCriteria().setQuerySearch(hashtag).setSince("2016-06-12").setUntil("2016-06-13").setMaxTweets(2)
+        self.brexitTweets = got3.manager.TweetManager.getTweets(self.tweetCriteria)
 
-    #brexitTweets = tweepy.Cursor(api.search,q="#brexit",show_user=True,locale=True,wait_on_rate_limit=True).items()
+        #brexitTweets = tweepy.Cursor(api.search,q="#brexit",show_user=True,locale=True,wait_on_rate_limit=True).items()
 
-    #loops through the list of tweetsco
-    for tweets in brexitTweets:
+        #loops through the list of tweetsco
+        for self.tweets in self.brexitTweets:
 
-        out = tweets.text
-        name = tweets.username
-        uid = tweets.id
-        date = tweets.date
-        geo = locGet.locFind(name)
-        followers = []
-        friends = []
-        tmp = 0
-        
-        #gets the users followers id and puts them in a list
-        for users in tweepy.Cursor(api.followers_ids, screen_name=name,wait_on_rate_limit=True,wait_on_rate_limit_notify=True).items(1):
-            #print ("Adding to followers list: ",users)
-            followers.append(users)
-        
-        #gets the users following and puts them in the list
-        #for users in tweepy.Cursor(api.friends, screen_name=name,wait_on_rate_limit=True,wait_on_rate_limit_notify=True).items():
-            #print ("Adding to friends list: ",users.screen_name)
-            #friends.append(users.screen_name)
+            self.out = self.tweets.text
+            self.name = self.tweets.username
+            self.uid = self.tweets.id
+            self.date = self.tweets.date
+            self.geo = geo().locFind(self.name)
+            self.followers = []
+            self.friends = []
+            self.tmp = 0
+            
+            #gets the users followers id and puts them in a list
+            for self.followersID in tweepy.Cursor(self.api.followers_ids, screen_name=self.name,wait_on_rate_limit=True,wait_on_rate_limit_notify=True).items(10):
+                #print ("Adding to followers list: ",users)
+                self.followers.append(self.followersID)
+            
+            #gets the users following and puts them in the list
+            for self.followingID in tweepy.Cursor(self.api.friends_ids, screen_name=self.name,wait_on_rate_limit=True,wait_on_rate_limit_notify=True).items(10):
+                #print ("Adding to friends list: ",users.screen_name)
+                self.friends.append(self.followingID)
 
-        print ("\n\nAdded:","\n    Username:",name,"\n    User ID:",uid,"\n    Date:",date,"\n    Location:",geo,"\n    Followers:",followers,"\n    Tweets:",out.encode("utf-8")) #shows tweets being added to the DB
-        
-        #adds the data to the database
+            #shows what is being added to the database
+            print ("\n\nAdded:","\n    Username:",self.name,"\n    User ID:",self.uid,"\n    Date:",self.date,"\n    Location:",self.geo,"\n    Followers:",self.followers,"\n    Following:",self.friends,"\n    Tweets:",self.out.encode("utf-8")) #shows tweets being added to the DB
+            
+            #adds the data to the database
+            self.results = self.db.tweets.insert_one(
+                {
+                    "username":self.name,
+                    "userID":self.uid,
+                    "date":self.date,
+                    "location:":self.geo,
+                    "followers":self.followers,
+                    "friends":self.friends,
+                    "tweet":self.out
+                    
+                }
+            )
 
-        results = db.tweets.insert_one(
-            {
-                "username":name,
-                "userID":uid,
-                "date":date,
-                "location:":geo,
-                "followers":followers,
-                #"friends":friends,
-                "tweet":out
-                
-            }
-        )
 
-getTweets(api,db,"#brexit") #calls the function that gets tweets and puts them in the DB
+go = Main(twitterAPI().authentigate(True),mongo().conn())
+go.getTweets("#brexit") #calls the function that gets tweets and puts them in the DB
