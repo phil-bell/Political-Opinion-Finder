@@ -3,6 +3,7 @@
 # to the twitter api.
 
 import tweepy
+import json
 
 # this is the function that is called to connect to the api
 # and return the operator for accessing it.
@@ -12,13 +13,16 @@ class twitterAPI:
     #authentigate must be handed conCheck bool value, if true it will show connection status message will be output.
     def authentigate(self,conCheck):
 
+        with open("apiCredentials.json") as dataFile:
+            cred = json.load(dataFile)
+
         #sets my consumer keys to auth.
-        self.auth = tweepy.OAuthHandler("esOD1d4qKPys3fjwFrrMxevGv", "ClhLgKumBTKUYosji5tUreMwTZGN84hBb0XDhB9ouKXRsqkXHq")
-                                        #^^Consumer Key^^           #^^Consumer Secret^^
+        self.auth = tweepy.OAuthHandler(cred["applicationKeys"][0]["consumerKey"],cred["applicationKeys"][0]["consumerSecret"])
+                                        #^^Consumer Key^^                         #^^Consumer Secret^^
         
-        #sets the appliction access keys to my consumer key.
-        self.auth.set_access_token("188453340-AsHcJSD3pCo2s4Ya6rOjJYXlW2ZiMARVa0xX8scY", "EQGTXpt507XS42sRTHs4son7bBc0UHhilaDoggfRW8KpZ")
-                                    #^^Access Token^^                                     #^^Access Token Secret^^
+        #sets the application access keys to my consumer key.
+        self.auth.set_access_token(cred["accessTokens"][0]["accessToken"],cred["accessTokens"][0]["accessTokenSecret"])
+                                    #^^Access Token^^                     #^^Access Token Secret^^
         
         #sends api keys to authenticator and returns access operator to the var api.
         self.api = tweepy.API(self.auth)
