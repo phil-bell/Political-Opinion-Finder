@@ -10,7 +10,7 @@ import json
 
 class twitterAPI:
 
-    #authentigate must be handed conCheck bool value, if true it will show connection status message will be output.
+    #authentigate must be handed conCheck bool value, if True it will show connection status message.
     def authentigate(self,conCheck):
 
         #gets data from json file
