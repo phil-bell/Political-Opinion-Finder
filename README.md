@@ -1,6 +1,6 @@
 # Political Opinion Finder
 
-This is my 3rd year Bsc Computer Science Degree Dissertation project. It involves a program that collects Tweets from twitter, analyses them to evaluate there opinion and then compare the overall opinion to pollster data.
+This is my 3rd year BSc Computer Science Degree Dissertation project. It involves a program that collects Tweets from twitter, analyses them to evaluate their opinion and then compare the overall opinion to pollster data.
 
 ## Motivation
 
