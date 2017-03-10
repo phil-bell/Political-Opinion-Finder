@@ -6,7 +6,7 @@ import tweepy #Twitter API library
 import codecs #encoding library for encodeding tweets in utf-8
 import pymongo #mongo library
 import time
-import got3 #library that allows search for legacy tweets, written by Jefferson Henrique (https://github.com/Jefferson-Henrique/GetOldTweets-python)
+import got3s #library that allows search for legacy tweets. Written by Jefferson Henrique (https://github.com/Jefferson-Henrique/GetOldTweets-python). Nothing in the got3 (GetOldTweets3) folder is written by me and I do not claim to have done!
 from pymongo import MongoClient #gets the mongo client method
 
 #imports local files
