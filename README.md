@@ -8,7 +8,7 @@ The motivation of this project is to investigate into the difference between pol
 
 ## Installation
 
-Clone the repositary then install the following Python libraries:
+Clone the repositary, install [Python 3](https://www.python.org/downloads/) and the following Python libraries:
 * `Tweepy` Twitter API library for accessing Twitter
 * `pymongo` MongoDB library for using MongoDB
 * `codecs` Encoding library for 
