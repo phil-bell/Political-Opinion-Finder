@@ -13,7 +13,7 @@ Clone the repositary, install [Python 3](https://www.python.org/downloads/) and 
 * `pymongo` MongoDB library for using MongoDB
 * `codecs` Encoding library for 
 
-At this current stage in development the program requires a local [MongoDB](https://www.mongodb.com/download-center?jmp=nav)
+At this current stage in development the program requires a local [MongoDB](https://www.mongodb.com/download-center?jmp=nav).
 
 User must also create a JSON file with there [Twitter API](https://apps.twitter.com/) credentials, use the [example](https://github.com/philhabell/Political-Opinion-Finder/blob/master/apiCredentialsExample.json) file as a guide.
 
