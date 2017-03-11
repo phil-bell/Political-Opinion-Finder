@@ -19,7 +19,7 @@ User must also create a JSON file with there [Twitter API](https://apps.twitter.
 
 ## Operation
 
-Simply run in console/terminal while [mongod](https://docs.mongodb.com/manual/reference/program/mongod/) is running:
+Simply run the following in console/terminal while [mongod](https://docs.mongodb.com/manual/reference/program/mongod/) is running:
 ``` 
 python ./main.py
 ```
