@@ -1,3 +1,4 @@
 apiCredentials.json
 *.pyc
 __pycache__/
+.vs/

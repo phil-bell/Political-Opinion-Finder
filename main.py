@@ -30,7 +30,7 @@ class Main:
 
         #brexitTweets = tweepy.Cursor(api.search,q="#brexit",show_user=True,locale=True,wait_on_rate_limit=True).items()
 
-        #loops through the list of tweetsco
+        #loops through the list of tweets
         for self.tweets in self.brexitTweets:
 
             self.out = self.tweets.text
@@ -65,7 +65,6 @@ class Main:
                     "followers":self.followers,
                     "friends":self.friends,
                     "tweet":self.out
-                    
                 }
             )
 
