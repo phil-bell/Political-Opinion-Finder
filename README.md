@@ -4,7 +4,7 @@ This is my 3rd year BSc Computer Science Degree Dissertation project. It involve
 
 ## Motivation
 
-The motivation of this project is to investigate into the difference between political opnions shared on online social media to the opinions of the general populace (opinions gathered from pollsters).
+The motivation of this project is to investigate into the difference between political opnions shared on online social media to the opinions of the general populace (opinions gathered from [pollsters data](https://github.com/philhabell/Political-Opinion-Finder/blob/master/pollsterData/polls.json)).
 
 ## Installation
 
@@ -13,13 +13,13 @@ Clone the repositary, install [Python 3](https://www.python.org/downloads/) and 
 * `pymongo` MongoDB library for using MongoDB
 * `codecs` Encoding library for 
 
-At this current stage in development the program requires a local MongoDB to be active (Please install from [MongoDB](https://www.mongodb.com/download-center?jmp=nav))
+At this current stage in development the program requires a local [MongoDB](https://www.mongodb.com/download-center?jmp=nav)
 
 User must also create a JSON file with there [Twitter API](https://apps.twitter.com/) credentials, use the [example](https://github.com/philhabell/Political-Opinion-Finder/blob/master/apiCredentialsExample.json) file as a guide.
 
 ## Operation
 
-Simple run in console/terminal:
+Simply run in console/terminal while [mongod](https://docs.mongodb.com/manual/reference/program/mongod/) is running:
 ``` 
 python ./main.py
 ```
