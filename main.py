@@ -6,6 +6,8 @@ import tweepy #Twitter API library
 import codecs #encoding library for encodeding tweets in utf-8
 import pymongo #mongo library
 import time
+import urllib
+import json
 import got3 #library that allows search for legacy tweets. Written by Jefferson Henrique (https://github.com/Jefferson-Henrique/GetOldTweets-python). Nothing in the got3 (GetOldTweets3) folder is written by me and I do not claim to have done!
 from pymongo import MongoClient #gets the mongo client method
 
@@ -25,7 +27,7 @@ class Main:
     #gets tweets from hashtag "#brexit" and puts them in the mongo database
     def getTweets(self,hashtag):
 
-        self.tweetCriteria = got3.manager.TweetCriteria().setQuerySearch(hashtag).setSince("2016-06-12").setUntil("2016-06-13").setMaxTweets(2)
+        self.tweetCriteria = got3.manager.TweetCriteria().setQuerySearch(hashtag).setSince("2016-06-12").setUntil("2016-06-13").setMaxTweets(100)
         self.brexitTweets = got3.manager.TweetManager.getTweets(self.tweetCriteria)
 
         #brexitTweets = tweepy.Cursor(api.search,q="#brexit",show_user=True,locale=True,wait_on_rate_limit=True).items()
@@ -43,17 +45,17 @@ class Main:
             self.tmp = 0
             
             #gets the users followers id and puts them in a list
-            for self.followersID in tweepy.Cursor(self.api.followers_ids, screen_name=self.name,wait_on_rate_limit=True,wait_on_rate_limit_notify=True).items(10):
+            for self.followersID in tweepy.Cursor(self.api.followers_ids, screen_name=self.name,wait_on_rate_limit=True,wait_on_rate_limit_notify=True).items(100):
                 #print ("Adding to followers list: ",users)
                 self.followers.append(self.followersID)
             
             #gets the users following and puts them in the list
-            for self.followingID in tweepy.Cursor(self.api.friends_ids, screen_name=self.name,wait_on_rate_limit=True,wait_on_rate_limit_notify=True).items(10):
+            for self.followingID in tweepy.Cursor(self.api.friends_ids, screen_name=self.name,wait_on_rate_limit=True,wait_on_rate_limit_notify=True).items(100):
                 #print ("Adding to friends list: ",users.screen_name)
                 self.friends.append(self.followingID)
 
             #shows what is being added to the database
-            print ("\n\nAdded:","\n    Username:",self.name,"\n    User ID:",self.uid,"\n    Date:",self.date,"\n    Location:",self.geo,"\n    Followers:",self.followers,"\n    Following:",self.friends,"\n    Tweets:",self.out.encode("utf-8")) #shows tweets being added to the DB
+            print ("\n\nAdded:","\n    Username:",self.name.encode("utf-8"),"\n    User ID:",self.uid,"\n    Date:",self.date,"\n    Location:",self.geo.encode("utf-8"),"\n    Followers:",self.followers,"\n    Following:",self.friends,"\n    Tweets:",self.out.encode("utf-8")) #shows tweets being added to the DB
             
             #adds the data to the database
             self.results = self.db.tweets.insert_one(
@@ -69,5 +71,7 @@ class Main:
             )
 
 
-go = Main(twitterAPI().authentigate(True),mongo().conn())
+twit = twitterAPI()
+mong = mongo()
+go = Main(twit.authentigate(True),mong.conn())
 go.getTweets("#brexit") #calls the function that gets tweets and puts them in the DB
