@@ -15,6 +15,7 @@ from pymongo import MongoClient #gets the mongo client method
 from authGet import twitterAPI
 from mongodb import mongo
 from locGet import geo
+from collection import collection
 
 
 #gets twitter api and mongo connection
@@ -24,54 +25,24 @@ class Main:
         self.api = api
         self.db = db
 
-    #gets tweets from hashtag "#brexit" and puts them in the mongo database
-    def getTweets(self,hashtag):
-
-        self.tweetCriteria = got3.manager.TweetCriteria().setQuerySearch(hashtag).setSince("2016-06-12").setUntil("2016-06-13").setMaxTweets(100)
-        self.brexitTweets = got3.manager.TweetManager.getTweets(self.tweetCriteria)
-
-        #brexitTweets = tweepy.Cursor(api.search,q="#brexit",show_user=True,locale=True,wait_on_rate_limit=True).items()
-
-        #loops through the list of tweets
-        for self.tweets in self.brexitTweets:
-
-            self.out = self.tweets.text
-            self.name = self.tweets.username
-            self.uid = self.tweets.id
-            self.date = self.tweets.date
-            self.geo = geo().locFind(self.name)
-            self.followers = []
-            self.friends = []
-            self.tmp = 0
-            
-            #gets the users followers id and puts them in a list
-            for self.followersID in tweepy.Cursor(self.api.followers_ids, screen_name=self.name,wait_on_rate_limit=True,wait_on_rate_limit_notify=True).items(100):
-                #print ("Adding to followers list: ",users)
-                self.followers.append(self.followersID)
-            
-            #gets the users following and puts them in the list
-            for self.followingID in tweepy.Cursor(self.api.friends_ids, screen_name=self.name,wait_on_rate_limit=True,wait_on_rate_limit_notify=True).items(100):
-                #print ("Adding to friends list: ",users.screen_name)
-                self.friends.append(self.followingID)
-
-            #shows what is being added to the database
-            print ("\n\nAdded:","\n    Username:",self.name.encode("utf-8"),"\n    User ID:",self.uid,"\n    Date:",self.date,"\n    Location:",self.geo.encode("utf-8"),"\n    Followers:",self.followers,"\n    Following:",self.friends,"\n    Tweets:",self.out.encode("utf-8")) #shows tweets being added to the DB
-            
-            #adds the data to the database
-            self.results = self.db.tweets.insert_one(
-                {
-                    "username":self.name,
-                    "userID":self.uid,
-                    "date":self.date,
-                    "location:":self.geo,
-                    "followers":self.followers,
-                    "friends":self.friends,
-                    "tweet":self.out
-                }
-            )
-
+    def menu(self):
+        self.userAnswer = input("What would you like to do:\n    1)Gather tweets into the database.\n    2)Find if #brexit or #remain is used more\n    3)Estimate what people will vote from tweets.\n    4)Compare twitter opinion to poll opinions.")
+        if (self.userAnswer == "1"):
+            coll.getTweets("#brexit")
+        elif (self.userAnswer == "2"):
+            anas.compare("#remain","#leave")
+        elif (self.userAnswer == "3"):
+            pass
+        elif (self.userAnswer == "4"):
+            pass
+        else:
+            print("Plase enter a valid input (1,2,3,4).")
+            go.menu()
+        return 0
 
 twit = twitterAPI()
 mong = mongo()
+anas = analyse(mong.conn())
+coll = collection(twit.authentigate(True), mong.conn())
 go = Main(twit.authentigate(True),mong.conn())
-go.getTweets("#brexit") #calls the function that gets tweets and puts them in the DB
+go.menu() #calls the function that gets tweets and puts them in the DB

@@ -1,7 +1,7 @@
 import sys
 import time
 
-class errors:
+class errorsHandler:
 
     #method that makes a loading bar, is passed an lenght of time in minutes
     def loadingBar(self,time):
