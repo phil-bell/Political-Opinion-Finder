@@ -1,5 +1,6 @@
 import pymongo
 import codecs
+import json
 
 from display import display
 from mongodb import mongo
@@ -46,6 +47,9 @@ class analyse:
         if(list(self.search2["counter"])[0] > list(self.search1["counter"])[0]):
             return item2
         return item1
+
+    def tweetMeaning():
+        return 0
 
 go = analyse(mongo().conn())
 output = display()
