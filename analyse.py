@@ -36,20 +36,47 @@ class analyse:
     #It must be handed:
     #   *First term to compare as a string
     #   *Second term to compare as a string
-    def compare(self,item1,item2):
-        self.search1 = go.searcher(item1)
+    def compare(self,term1,term2):
+        self.search1 = go.searcher(term1)
         output.divider(100,"=")
-        self.search2 = go.searcher(item2) 
+        self.search2 = go.searcher(term2) 
         
         print(output.joiner(self.search1["counter"]))
         print(output.joiner(self.search2["counter"]))
 
         if(list(self.search2["counter"])[0] > list(self.search1["counter"])[0]):
-            return item2
-        return item1
+            return term2
+        return term1
 
-    def tweetMeaning():
-        return 0
+    
+    def tweetMeaning(self,term):
+        self.search = go.searcher(term)
+        self.dict{
+            "tweet":[],
+            "goodcount":[],
+            "badcount":[],
+            "view":[]
+        }
+        with open("words.json") as filedata:
+            self.wordList = json.load(filedata)
+        for self.i in self.search["list"]:
+            self.procounter = 0
+            self.negcounter = 0
+            for self.word in self.i:
+                if self.word in self.wordList["good"]:
+                    self.procounter =+ 1
+                if self.word in self.wordList["bad"]:
+                    self.negcounter =+ 1
+                if self.word in self.wordList["swear"]:
+                    self.negcounter = + 1
+            self.dict["tweet"].append(search["list"])
+            self.dict["goodcount"].append(self.procounter)
+            self.dict["badcount"].append(self.negcounter)
+            if (self.procounter > self.negcounter):
+                self.dict["view"].append("pro")
+            else:
+                self.dict["view"].append("neg")
+        return self.dict
 
 go = analyse(mongo().conn())
 output = display()
