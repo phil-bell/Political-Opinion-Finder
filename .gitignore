@@ -2,3 +2,4 @@ apiCredentials.json
 *.pyc
 __pycache__/
 .vs/
+mongoCredentials.json
