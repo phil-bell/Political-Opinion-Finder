@@ -18,7 +18,7 @@ At this current stage in development the program requires a local [MongoDB](http
 User must also create a JSON file with there [Twitter API](https://apps.twitter.com/) credentials, use the [example](https://github.com/philhabell/Political-Opinion-Finder/blob/master/apiCredentialsExample.json) file as a guide.
 
 ## Operation
-Fill in the necessary information into `apiCredentials.json` and `mongoCredentials.json` using the example [files](https://github.com/philhabell/Political-Opinion-Finder/tree/master/data) (if running a local mongo server leave `mongoURL` empty).
+Fill in the necessary information into `apiCredentials.json` and `mongoCredentials.json` using the example [files](https://github.com/philhabell/Political-Opinion-Finder/tree/master/credentials) (if running a local mongo server leave `mongoURL` empty).
 Then run the following in console/terminal:
 ``` 
 python ./main.py
