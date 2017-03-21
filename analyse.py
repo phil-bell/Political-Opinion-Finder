@@ -51,7 +51,7 @@ class analyse:
     
     def tweetMeaning(self,term):
         self.search = go.searcher(term)
-        self.dict{
+        self.tweetdict = {
             "tweet":[],
             "goodcount":[],
             "badcount":[],
@@ -69,15 +69,16 @@ class analyse:
                     self.negcounter =+ 1
                 if self.word in self.wordList["swear"]:
                     self.negcounter = + 1
-            self.dict["tweet"].append(search["list"])
-            self.dict["goodcount"].append(self.procounter)
-            self.dict["badcount"].append(self.negcounter)
+            self.tweetdict["tweet"].append(search["list"])
+            self.tweetdict["goodcount"].append(self.procounter)
+            self.tweetdict["badcount"].append(self.negcounter)
             if (self.procounter > self.negcounter):
-                self.dict["view"].append("pro")
+                self.tweetdict["view"].append("pro")
             else:
-                self.dict["view"].append("neg")
-        return self.dict
-
+                self.tweetdict["view"].append("neg")
+        return self.tweetdict
+"""
 go = analyse(mongo().conn())
 output = display()
 print(go.compare("#remain","#leave"))
+"""

@@ -15,6 +15,7 @@ from pymongo import MongoClient #gets the mongo client method
 from authGet import twitterAPI
 from mongodb import mongo
 from locGet import geo
+from analyse import analyse
 from collection import collection
 
 
@@ -26,7 +27,7 @@ class Main:
         self.db = db
 
     def menu(self):
-        self.userAnswer = input("What would you like to do:\n    1)Gather tweets into the database.\n    2)Find if #brexit or #remain is used more\n    3)Estimate what people will vote from tweets.\n    4)Compare twitter opinion to poll opinions.")
+        self.userAnswer = input("What would you like to do:\n    1)Gather tweets into the database.\n    2)Find if #brexit or #remain is used more\n    3)Estimate what people will vote from tweets.\n    4)Compare twitter opinion to poll opinions.\nEnter: ")
         if (self.userAnswer == "1"):
             coll.getTweets("#brexit")
         elif (self.userAnswer == "2"):

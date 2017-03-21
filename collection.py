@@ -1,14 +1,18 @@
+import got3
+import tweepy
+
+from locGet import geo
 
 class collection:
     def __init__(self, api, db):
         self.api = api
         self.db = db
 
-        #gets tweets from hashtag "#brexit" and puts them in the mongo database
-        def getTweets(self, hashtag):
+    #gets tweets from hashtag "#brexit" and puts them in the mongo database
+    def getTweets(self, hashtag):
 
         self.tweetCriteria = got3.manager.TweetCriteria().setQuerySearch(
-            hashtag).setSince("2016-06-12").setUntil("2016-06-13").setMaxTweets(100)
+            hashtag).setSince("2016-06-12").setUntil("2016-06-13").setMaxTweets(1)
         self.brexitTweets = got3.manager.TweetManager.getTweets(
             self.tweetCriteria)
 
