@@ -4,7 +4,7 @@ This is my 3rd year BSc Computer Science Degree Dissertation project. It involve
 
 ## Motivation
 
-The motivation of this project is to investigate into the difference between political opnions shared on online social media to the opinions of the general populace (opinions gathered from [pollsters data](https://github.com/philhabell/Political-Opinion-Finder/blob/master/data/pollsterData/polls.json)).
+The motivation of this project is to investigate into the difference between political opnions shared on online social media to the opinions of the general populace (opinions gathered from [pollsters data](https://github.com/philhabell/Political-Opinion-Finder/blob/master/data/polls.json)).
 
 ## Installation
 
