@@ -14,7 +14,7 @@ class twitterAPI:
     def authentigate(self,conCheck):
 
         #gets data from json file
-        with open("apiCredentials.json") as dataFile:
+        with open("credentials/apiCredentials.json") as dataFile:
             cred = json.load(dataFile)
 
         #sets my consumer keys to auth.

@@ -57,7 +57,7 @@ class analyse:
             "badcount":[],
             "view":[]
         }
-        with open("words.json") as filedata:
+        with open("data/words.json") as filedata:
             self.wordList = json.load(filedata)
         for self.i in self.search["list"]:
             self.procounter = 0
