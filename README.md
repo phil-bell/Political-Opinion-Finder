@@ -4,7 +4,7 @@ This is my 3rd year BSc Computer Science Degree Dissertation project. It involve
 
 ## Motivation
 
-The motivation of this project is to investigate into the difference between political opnions shared on online social media to the opinions of the general populace (opinions gathered from [pollsters data](https://github.com/philhabell/Political-Opinion-Finder/blob/master/pollsterData/polls.json)).
+The motivation of this project is to investigate into the difference between political opnions shared on online social media to the opinions of the general populace (opinions gathered from [pollsters data](https://github.com/philhabell/Political-Opinion-Finder/blob/master/data/pollsterData/polls.json)).
 
 ## Installation
 
@@ -13,14 +13,14 @@ Clone the repositary, install [Python 3](https://www.python.org/downloads/) and 
 * `pymongo` MongoDB library for using MongoDB
 * `codecs` Encoding library for 
 
-At this current stage in development the program requires a local [MongoDB](https://www.mongodb.com/download-center?jmp=nav).
+Create a JSON file with users MongoDB server credentials, use the [example](https://github.com/philhabell/Political-Opinion-Finder/blob/master/credentials/mongoCredentialsExample.json) file as a guide. If using a local server download [MongoDB](https://www.mongodb.com/download-center?jmp=nav) and leave `mongoURL` empty in the JSON file.
 
-User must also create a JSON file with there [Twitter API](https://apps.twitter.com/) credentials, use the [example](https://github.com/philhabell/Political-Opinion-Finder/blob/master/apiCredentialsExample.json) file as a guide.
+User must also create a JSON file with there [Twitter API](https://apps.twitter.com/) credentials, use the [example](https://github.com/philhabell/Political-Opinion-Finder/blob/master/credentials/apiCredentialsExample.json) file as a guide.
+
 
 ## Operation
-Fill in the necessary information into `apiCredentials.json` and `mongoCredentials.json` using the example [files](https://github.com/philhabell/Political-Opinion-Finder/tree/master/credentials) (if running a local mongo server leave `mongoURL` empty).
 
-Then run the following in console/terminal:
+Run the following in console/terminal:
 ``` 
 python ./main.py
 ```
