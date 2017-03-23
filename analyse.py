@@ -20,7 +20,7 @@ class analyse:
         self.tweetList = self.db.tweets.find({})
         for self.i in self.tweetList:
             if (term in self.i["tweet"]):
-                print(self.i["tweet"].encode("utf-8"))
+                #print(self.i["tweet"].encode("utf-8"))
                 self.incremetor = self.incremetor + 1
 
         self.out = {
@@ -48,14 +48,14 @@ class analyse:
             return term2
         return term1
 
-    
+    #
     def tweetMeaning(self,term):
         self.search = go.searcher(term)
         self.tweetdict = {
-            "tweet":[],
-            "goodcount":[],
-            "badcount":[],
-            "view":[]
+            "tweet":{},
+            "goodcount":{},
+            "badcount":{},
+            "view":{}
         }
         with open("data/words.json") as filedata:
             self.wordList = json.load(filedata)
@@ -69,16 +69,22 @@ class analyse:
                     self.negcounter =+ 1
                 if self.word in self.wordList["swear"]:
                     self.negcounter = + 1
-            self.tweetdict["tweet"].append(search["list"])
-            self.tweetdict["goodcount"].append(self.procounter)
-            self.tweetdict["badcount"].append(self.negcounter)
+            self.tweetdict["tweet"] = self.search["list"]
+            self.tweetdict["goodcount"] = self.procounter
+            self.tweetdict["badcount"] = self.negcounter
             if (self.procounter > self.negcounter):
-                self.tweetdict["view"].append("pro")
+                self.tweetdict["view"] = "pro"
             else:
-                self.tweetdict["view"].append("neg")
+                self.tweetdict["view"] = "neg"
         return self.tweetdict
 """
 go = analyse(mongo().conn())
 output = display()
 print(go.compare("#remain","#leave"))
-"""
+
+go = analyse(mongo().conn())
+out = go.tweetMeaning("#Brexit")
+print(out["view"])
+print(out["badcount"])
+print(out["goodcount"])
+print(out["tweet"])"""

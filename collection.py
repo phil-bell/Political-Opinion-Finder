@@ -1,7 +1,17 @@
-import got3
-import tweepy
+import tweepy #Twitter API library
+import codecs #encoding library for encodeding tweets in utf-8
+import pymongo #mongo library
+import time
+import urllib
+import json
+import got3 #library that allows search for legacy tweets. Written by Jefferson Henrique (https://github.com/Jefferson-Henrique/GetOldTweets-python). Nothing in the got3 (GetOldTweets3) folder is written by me and I do not claim to have done!
+from pymongo import MongoClient #gets the mongo client method
 
+
+from authGet import twitterAPI
+from mongodb import mongo
 from locGet import geo
+from analyse import analyse
 
 class collection:
     def __init__(self, api, db):
@@ -11,10 +21,8 @@ class collection:
     #gets tweets from hashtag "#brexit" and puts them in the mongo database
     def getTweets(self, hashtag):
 
-        self.tweetCriteria = got3.manager.TweetCriteria().setQuerySearch(
-            hashtag).setSince("2016-06-12").setUntil("2016-06-13").setMaxTweets(1)
-        self.brexitTweets = got3.manager.TweetManager.getTweets(
-            self.tweetCriteria)
+        self.tweetCriteria = got3.manager.TweetCriteria().setQuerySearch(hashtag).setSince("2016-06-12").setUntil("2016-06-13").setMaxTweets(1000)
+        self.brexitTweets = got3.manager.TweetManager.getTweets(self.tweetCriteria)
 
         # brexitTweets =
         # tweepy.Cursor(api.search,q="#brexit",show_user=True,locale=True,wait_on_rate_limit=True).items()
@@ -24,7 +32,8 @@ class collection:
 
             self.out = self.tweets.text
             self.name = self.tweets.username
-            self.uid = self.tweets.id
+            self.uid = self.tweets.author_id
+            self.tweetid = self.tweets.id
             self.date = self.tweets.date
             self.geo = geo().locFind(self.name)
             self.followers = []
@@ -42,14 +51,14 @@ class collection:
                 self.friends.append(self.followingID)
 
             #shows what is being added to the database
-            print("\n\nAdded:", "\n    Username:", self.name.encode("utf-8"), "\n    User ID:", self.uid, "\n    Date:", self.date, "\n    Location:", self.geo.encode("utf-8"),
+            print("\n\nAdded:", "\n    Username:", self.name.encode("utf-8"), "\n    Tteet ID:", self.tweetid, "\n    Date:", self.date, "\n    Location:", self.geo.encode("utf-8"),
                   "\n    Followers:", self.followers, "\n    Following:", self.friends, "\n    Tweets:", self.out.encode("utf-8"))  # shows tweets being added to the DB
 
             #adds the data to the database
             self.results = self.db.tweets.insert_one(
                 {
                     "username": self.name,
-                    "userID": self.uid,
+                    "userID": self.tweetid,
                     "date": self.date,
                     "location:": self.geo,
                     "followers": self.followers,
