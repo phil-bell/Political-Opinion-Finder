@@ -1,6 +1,7 @@
 import pymongo
 import codecs
 import json
+import nltk
 
 from display import display
 from mongodb import mongo
