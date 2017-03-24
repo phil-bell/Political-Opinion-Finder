@@ -1,10 +1,10 @@
 # Political Opinion Finder
 
-This is my 3rd year BSc Computer Science Degree Dissertation project. It involves a program that collects Tweets from twitter, analyses them to evaluate their opinion and then compare the overall opinion to pollster data.
+This is my 3rd year BSc Computer Science Degree Dissertation project. It involves a program that collects Tweets from twitter, analyses them using natual language to calcualte their political opinion so it can then be compared general populace opinions from pollster data.
 
 ## Motivation
 
-The motivation of this project is to investigate into the difference between political opnions shared on online social media to the opinions of the general populace (opinions gathered from [pollsters data](https://github.com/philhabell/Political-Opinion-Finder/blob/master/data/polls.json)).
+The motivation of this project is to investigate into the difference between political opnions shared on online social media to the opinions of the general populace (opinions gathered from [pollsters data](https://github.com/philhabell/Political-Opinion-Finder/blob/master/data/polls.json)) by using natural language and big data analyse.
 
 ## Installation
 

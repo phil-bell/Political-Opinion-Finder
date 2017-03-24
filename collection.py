@@ -21,7 +21,7 @@ class collection:
     #gets tweets from hashtag "#brexit" and puts them in the mongo database
     def getTweets(self, hashtag):
 
-        self.tweetCriteria = got3.manager.TweetCriteria().setQuerySearch(hashtag).setSince("2016-06-12").setUntil("2016-06-13").setMaxTweets(1000)
+        self.tweetCriteria = got3.manager.TweetCriteria().setQuerySearch(hashtag).setSince("2016-06-12").setUntil("2016-06-13").setMaxTweets(20000)
         self.brexitTweets = got3.manager.TweetManager.getTweets(self.tweetCriteria)
 
         # brexitTweets =
@@ -41,28 +41,36 @@ class collection:
             self.tmp = 0
 
             #gets the users followers id and puts them in a list
-            for self.followersID in tweepy.Cursor(self.api.followers_ids, screen_name=self.name, wait_on_rate_limit=True, wait_on_rate_limit_notify=True).items(100):
+            #for self.followersID in tweepy.Cursor(self.api.followers_ids, screen_name=self.name, wait_on_rate_limit=True, wait_on_rate_limit_notify=True).items(100):
                 #print ("Adding to followers list: ",users)
-                self.followers.append(self.followersID)
+                #self.followers.append(self.followersID)
 
             #gets the users following and puts them in the list
-            for self.followingID in tweepy.Cursor(self.api.friends_ids, screen_name=self.name, wait_on_rate_limit=True, wait_on_rate_limit_notify=True).items(100):
+            #for self.followingID in tweepy.Cursor(self.api.friends_ids, screen_name=self.name, wait_on_rate_limit=True, wait_on_rate_limit_notify=True).items(100):
                 #print ("Adding to friends list: ",users.screen_name)
-                self.friends.append(self.followingID)
+                #self.friends.append(self.followingID)
 
             #shows what is being added to the database
-            print("\n\nAdded:", "\n    Username:", self.name.encode("utf-8"), "\n    Tteet ID:", self.tweetid, "\n    Date:", self.date, "\n    Location:", self.geo.encode("utf-8"),
-                  "\n    Followers:", self.followers, "\n    Following:", self.friends, "\n    Tweets:", self.out.encode("utf-8"))  # shows tweets being added to the DB
+            print("\n\nAdded:",  
+                "\n    User ID:", self.uid, 
+                "\n    Tweet ID:", self.tweetid, 
+                "\n    Username:", self.name.encode("utf-8"),
+                "\n    Date:", self.date, 
+                "\n    Location:", self.geo.encode("utf-8"),
+                "\n    Tweets:", self.out.encode("utf-8"),
+                "\n    Followers:", self.followers, 
+                "\n    Following:", self.friends,)  # shows tweets being added to the DB
 
             #adds the data to the database
             self.results = self.db.tweets.insert_one(
                 {
+                    "userID": self.uid,
+                    "tweetID": self.tweetid,
                     "username": self.name,
-                    "userID": self.tweetid,
                     "date": self.date,
                     "location:": self.geo,
+                    "tweet": self.out,
                     "followers": self.followers,
-                    "friends": self.friends,
-                    "tweet": self.out
+                    "friends": self.friends
                 }
             )
