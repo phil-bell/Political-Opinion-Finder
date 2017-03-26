@@ -12,7 +12,8 @@ class mongo:
         #gets the mongo credentials from a json file
         with open("credentials/mongoCredentials.json") as dataFile:
             cred = json.load(dataFile)
-
-        self.client = MongoClient(cred["mongoURL"])  # sets the client (change the url mongoCredentials.json)
+        
+        url = "mongodb://"+cred["username"]+":"+cred["password"]+"@"+cred["address"]
+        self.client = MongoClient(url)  # sets the client (change the url mongoCredentials.json)
         self.db = self.client.tweetsDB #creates an operator for accessing the DB 
         return self.db #returns the operator
