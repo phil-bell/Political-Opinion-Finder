@@ -74,3 +74,17 @@ class collection:
                     "friends": self.friends
                 }
             )
+    def getConnections():
+
+        self.out = self.db.tweets.find({})
+
+        for self.i in self.out:
+            #gets the users followers id and puts them in a list
+            for self.followersID in tweepy.Cursor(self.api.followers_ids, user_id=self.i["userID"], wait_on_rate_limit=True, wait_on_rate_limit_notify=True).items(100):
+                print ("Adding to followers list: ",users)
+                self.followers.append(self.followersID)
+
+            #gets the users following and puts them in the list
+            for self.followingID in tweepy.Cursor(self.api.friends_ids, user_id=self.i["userID"], wait_on_rate_limit=True, wait_on_rate_limit_notify=True).items(100):
+                print ("Adding to friends list: ",users.screen_name)
+                self.friends.append(self.followingID)
