@@ -2,6 +2,7 @@ import pymongo
 import codecs
 import json
 import nltk
+from pprint import pprint
 
 from display import display
 from mongodb import mongo
@@ -51,41 +52,54 @@ class analyse:
 
     #
     def tweetMeaning(self,term):
-        self.search = go.searcher(term)
-        self.tweetdict = {
-            "tweet":{},
-            "goodcount":{},
-            "badcount":{},
-            "view":{}
-        }
+        self.dbout = self.db.tweets.find({})
+
         with open("data/words.json") as filedata:
             self.wordList = json.load(filedata)
-        for self.i in self.search["list"]:
-            self.procounter = 0
-            self.negcounter = 0
-            for self.word in self.i:
-                if self.word in self.wordList["good"]:
-                    self.procounter =+ 1
-                if self.word in self.wordList["bad"]:
-                    self.negcounter =+ 1
-                if self.word in self.wordList["swear"]:
-                    self.negcounter = + 1
-            self.tweetdict["tweet"] = self.search["list"]
-            self.tweetdict["goodcount"] = self.procounter
-            self.tweetdict["badcount"] = self.negcounter
-            if (self.procounter > self.negcounter):
-                self.tweetdict["view"] = "pro"
-            else:
-                self.tweetdict["view"] = "neg"
-        return self.tweetdict
-"""
-go = analyse(mongo().conn())
-output = display()
-print(go.compare("#remain","#leave"))
+
+        self.skipped = 0
+        self.count = 0
+        for self.i in self.dbout:
+            print(self.i.encode("cp850","ignore"))
+
+        #     try:
+        #         print(self.i)
+        #         self.count = self.count + 1
+        #     except UnicodeEncodeError:
+        #         print("unicode character")
+        #         self.skipped = self.skipped + 1
+        # print(self.count)
+        # print(self.skipped)
+        
+        # for self.i in self.search["list"]:
+        #     self.procounter = 0
+        #     self.negcounter = 0
+        #     for self.word in self.i:
+        #         if self.word in self.wordList["good"]:
+        #             self.procounter =+ 1
+        #         if self.word in self.wordList["bad"]:
+        #             self.negcounter =+ 1
+        #         if self.word in self.wordList["swear"]:
+        #             self.negcounter = + 1
+        #     self.tweetdict["tweet"] = self.search["list"]
+        #     self.tweetdict["goodcount"] = self.procounter
+        #     self.tweetdict["badcount"] = self.negcounter
+        #     if (self.procounter > self.negcounter):
+        #         self.tweetdict["view"] = "pro"
+        #     else:
+        #         self.tweetdict["view"] = "neg"
+        # return self.tweetdict
+        
+
+
+
+# go = analyse(mongo().conn())
+# output = display()
+# print(go.compare("#remain","#leave"))
 
 go = analyse(mongo().conn())
 out = go.tweetMeaning("#Brexit")
-print(out["view"])
-print(out["badcount"])
-print(out["goodcount"])
-print(out["tweet"])"""
+# print(out["view"])
+# print(out["badcount"])
+# print(out["goodcount"])
+# print(out["tweet"])

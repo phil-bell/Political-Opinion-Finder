@@ -74,6 +74,7 @@ class collection:
                     "friends": self.friends
                 }
             )
+    #This method gets all the followers and follows of the users in the database
     def getConnections():
 
         self.out = self.db.tweets.find({})
