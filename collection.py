@@ -40,16 +40,6 @@ class collection:
             self.friends = []
             self.tmp = 0
 
-            #gets the users followers id and puts them in a list
-            #for self.followersID in tweepy.Cursor(self.api.followers_ids, screen_name=self.name, wait_on_rate_limit=True, wait_on_rate_limit_notify=True).items(100):
-                #print ("Adding to followers list: ",users)
-                #self.followers.append(self.followersID)
-
-            #gets the users following and puts them in the list
-            #for self.followingID in tweepy.Cursor(self.api.friends_ids, screen_name=self.name, wait_on_rate_limit=True, wait_on_rate_limit_notify=True).items(100):
-                #print ("Adding to friends list: ",users.screen_name)
-                #self.friends.append(self.followingID)
-
             #shows what is being added to the database
             print("\n\nAdded:",  
                 "\n    User ID:", self.uid, 

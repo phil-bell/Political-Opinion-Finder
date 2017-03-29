@@ -27,17 +27,40 @@ class Main:
         self.db = db
 
     def menu(self):
-        self.userAnswer = input("What would you like to do:\n    1)Gather tweets into the database.\n    2)Find if #brexit or #remain is used more\n    3)Estimate what people will vote from tweets.\n    4)Compare twitter opinion to poll opinions.\nEnter: ")
+        self.userAnswer = input("What would you like to do:"+
+        "\n    1)Gather tweets into the database."+
+        "\n    2)Find if #X or #Y is used more."+
+        "\n    3)Find Twitters opinion on a hashtag"+
+        "\n    4)Estimate what people will vote from tweets."+
+        "\n    5)Compare twitter opinion to poll opinions."+
+        "\nEnter: ")
         if (self.userAnswer == "1"):
             coll.getTweets("#brexit")
         elif (self.userAnswer == "2"):
-            anas.compare("#remain","#leave")
+            self.u1 = input("First term: ")
+            self.u2 = input("Second term: ")
+            print(anas.compare(self.u1,self.u2),"is used more")
         elif (self.userAnswer == "3"):
-            pass
+            self.input = input("What term would you like to evaluate: ")
+            self.out = anas.tweetMeaning(self.input)
+            time.sleep(.5)
+            self.procount = 0
+            self.negcount = 0
+            for self.i in self.out:
+                if (self.i["view"] == "pro"):
+                    self.procount = self.procount + 1
+                else:
+                    self.negcount = self.negcount + 1
+            print("Tweets for:",self.procount)
+            print("Tweets against:",self.negcount)
+            if self.procount > self.negcount:
+                print("Twitter user are in favor of:",self.input)
+            else:
+                print("Twitter user are not in favor of:", self.input)
         elif (self.userAnswer == "4"):
             pass
         else:
-            print("Plase enter a valid input (1,2,3,4).")
+            print("Plase enter a valid input (1,2,3,4,5).")
             go.menu()
         return 0
 
@@ -45,5 +68,5 @@ twit = twitterAPI()
 mong = mongo()
 anas = analyse(mong.conn())
 coll = collection(twit.authentigate(True), mong.conn())
-go = Main(twit.authentigate(True),mong.conn())
+go = Main(twit.authentigate(False),mong.conn())
 go.menu() #calls the function that gets tweets and puts them in the DB
