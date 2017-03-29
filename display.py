@@ -1,7 +1,11 @@
 #The display class include methods that display things to
 #the screen for the user.
+from time import sleep
 
 class display:
+    def __init__(self):
+        self.stopper = True
+
     #This creates a dividers must be passed:
     #   * length of the divider
     #   * what the divider is made of, "=" for example
@@ -36,4 +40,61 @@ class display:
             self.s.append('%s%r: %s,\n' % ('  ' * tab, self.k, self.v))
         self.s.append('%s}' % ('  ' * tab))
         return ''.join(self.s)
+    
+    #what called this stops the loading spinner
+    def stop(self):
+        self.stopper = False
+        sleep(.5)
 
+    #Loading spinner that will spin while something is loaded.
+    #Must be threaded and must call stop() to stop it spinning.
+    def spinner(self, message):
+        self.stopper = True
+        while self.stopper == True:
+            print(message, "[\]", end="\r")
+            sleep(.1)
+            print(message, "[|]", end="\r")
+            sleep(.1)
+            print(message, "[/]", end="\r")
+            sleep(.1)
+            print(message, "[—]", end="\r")
+            sleep(.1)
+        print("Complete...              ")
+
+
+    def slider(self,message):
+        self.stopper = True
+        while self.stopper == True:
+            print(message, "[=-------]", end="\r")
+            sleep(.07)
+            print(message, "[-=------]", end="\r")
+            sleep(.07)
+            print(message, "[--=-----]", end="\r")
+            sleep(.07)
+            print(message, "[---=----]", end="\r")
+            sleep(.07)
+            print(message, "[----=---]", end="\r")
+            sleep(.07)
+            print(message, "[-----=--]", end="\r")
+            sleep(.07)
+            print(message, "[------=-]", end="\r")
+            sleep(.07)
+            print(message, "[-------=]", end="\r")
+            sleep(.07)
+            print(message, "[-------=]", end="\r")
+            sleep(.07)
+            print(message, "[------=-]", end="\r")
+            sleep(.07)
+            print(message, "[-----=--]", end="\r")
+            sleep(.07)
+            print(message, "[----=---]", end="\r")
+            sleep(.07)
+            print(message, "[---=----]", end="\r")
+            sleep(.07)
+            print(message, "[--=-----]", end="\r")
+            sleep(.07)
+            print(message, "[-=------]", end="\r")
+            sleep(.07)
+            print(message, "[=-------]", end="\r")
+            sleep(.07)
+        print("Connected                       ")

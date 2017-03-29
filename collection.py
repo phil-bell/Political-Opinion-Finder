@@ -1,9 +1,10 @@
 import tweepy #Twitter API library
 import codecs #encoding library for encodeding tweets in utf-8
 import pymongo #mongo library
-import time
+from time import sleep
 import urllib
 import json
+import threading
 import got3 #library that allows search for legacy tweets. Written by Jefferson Henrique (https://github.com/Jefferson-Henrique/GetOldTweets-python). Nothing in the got3 (GetOldTweets3) folder is written by me and I do not claim to have done!
 from pymongo import MongoClient #gets the mongo client method
 
@@ -12,6 +13,9 @@ from authGet import twitterAPI
 from mongodb import mongo
 from locGet import geo
 from analyse import analyse
+from display import display
+
+stopper = True
 
 class collection:
     def __init__(self, api, db):
@@ -21,8 +25,13 @@ class collection:
     #gets tweets from hashtag "#brexit" and puts them in the mongo database
     def getTweets(self, hashtag):
 
-        self.tweetCriteria = got3.manager.TweetCriteria().setQuerySearch(hashtag).setSince("2016-06-12").setUntil("2016-06-13").setMaxTweets(20000)
+        dis = display()
+
+        threading.Thread(target=dis.spinner, args=("Scrapping Tweets ",)).start()
+        self.tweetCriteria = got3.manager.TweetCriteria().setQuerySearch(hashtag).setSince("2016-06-12").setUntil("2016-06-13").setMaxTweets(1)
         self.brexitTweets = got3.manager.TweetManager.getTweets(self.tweetCriteria)
+
+        dis.stop()
 
         # brexitTweets =
         # tweepy.Cursor(api.search,q="#brexit",show_user=True,locale=True,wait_on_rate_limit=True).items()
@@ -52,7 +61,7 @@ class collection:
                 "\n    Following:", self.friends,)  # shows tweets being added to the DB
 
             #adds the data to the database
-            self.results = self.db.tweets.insert_one(
+            self.results = self.db.tweetsEXAMPLE.insert_one(
                 {
                     "userID": self.uid,
                     "tweetID": self.tweetid,

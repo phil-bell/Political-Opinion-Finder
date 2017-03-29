@@ -14,26 +14,12 @@ class analyse:
     def __init__(self,db):
         self.db = db
 
-    def spinner(self):
-        global stopper
-        while stopper == True:
-            print("Analysing Tweets [\]", end="\r")
-            sleep(.1)
-            print("Analysing Tweets [|]", end="\r")
-            sleep(.1)
-            print("Analysing Tweets [/]", end="\r")
-            sleep(.1)
-            print("Analysing Tweets [—]", end="\r")
-            sleep(.1)
-        print("Complete...              ")
-        
-
     #The searcher find tweets in the database with with the search term handed
     #to it with. It will return the tweets the term and number of times it 
     #apeares in the database in a dictionary.
     #It must be handed:
     #   *a search term as a string
-    def searcher(self,term):
+    def counter(self,term):
         self.incremetor = 0
         self.tweetList = self.db.tweets.find({})
         for self.i in self.tweetList:
@@ -55,39 +41,49 @@ class analyse:
     #   *First term to compare as a string
     #   *Second term to compare as a string
     def compare(self,term1,term2):
-        global stopper
 
-        stopper = True
-        threading.Thread(target=go.spinner, args=()).start()
+        dis = display()
 
-        self.search1 = go.searcher(term1)
-        self.search2 = go.searcher(term2) 
+        threading.Thread(target=dis.spinner, args=("Analysing Tweets ",)).start()
 
-        stopper = False
-        sleep(.5)
+        self.search1 = analyse(self.db).counter(term1)
+        self.search2 = analyse(self.db).counter(term2) 
+        
+        dis.stop()
 
-        print(term1,":",display().joiner(self.search1["counter"]))
-        print(term2, ":", display().joiner(self.search2["counter"]))
+        print(term1,":",dis.joiner(self.search1["counter"]))
+        print(term2, ":", dis.joiner(self.search2["counter"]))
 
         if(list(self.search2["counter"])[0] > list(self.search1["counter"])[0]):
             return term2
         return term1
 
+    
+    def searcher(self,term):
+        dis = display()
+        threading.Thread(target=dis.spinner, args=("Searching Database ",)).start()
+        self.tweetList = []
+        self.dbout = self.db.tweets.find({})
+        for self.i in self.dbout:
+            if term in self.i["tweet"]:
+                self.tweetList.append(self.i)
+        dis.stop()
+        return self.tweetList
+
+
     #
     def tweetMeaning(self,term):
-        global stopper
-        self.dbout = self.db.tweets.find({})
+        self.dbout = self.searcher(term)
 
         with open("data/words.json") as filedata:
             self.wordList = json.load(filedata)
 
-        stopper = True
-        threading.Thread(target=go.spinner, args=()).start()
+        dis = display()
+        threading.Thread(target=dis.spinner, args=("Analysing Tweets ",)).start()
         self.tweetList = []
         for self.i in self.dbout:
             self.procounter = 0
             self.negcounter = 0
-            #print("Analysing tweet: "+self.i["tweet"])
             for self.word in self.i["tweet"].split():
                 #print("Analysing word: "+self.word)
                 if self.word in self.wordList["good"]:
@@ -107,17 +103,17 @@ class analyse:
                 "view":"pro" if self.procounter >= self.negcounter else "neg"
             }
             self.tweetList.append(self.tweetDict)
-        stopper = False
+        dis.stop()
         return self.tweetList
+        
 
 
 # go = analyse(mongo().conn())
 # output = display()
 # print(go.compare("#remain","#leave"))
+#go = analyse(mongo().conn())
 
-stopper = True
-go = analyse(mongo().conn())
-
+#go.tweetMeaning("#remain")
 # out = go.tweetMeaning("#remain")
 
 # print(out["view"])

@@ -5,10 +5,11 @@
 import tweepy #Twitter API library
 import codecs #encoding library for encodeding tweets in utf-8
 import pymongo #mongo library
-import time
+from time import sleep
 import urllib
 import json
-import got3 #library that allows search for legacy tweets. Written by Jefferson Henrique (https://github.com/Jefferson-Henrique/GetOldTweets-python). Nothing in the got3 (GetOldTweets3) folder is written by me and I do not claim to have done!
+import threading
+import got3 #library that allows search for legacy tweets. Written by Jefferson Henrique (https://github.com/Jefferson-Henrique/GetOldTweets-python). Nothing in the got3 (GetOldTweets3) folder is written by me and I do not claim to have done! UPDATE: GOT no longer works and I am using a version of it that I maintain my self ()
 from pymongo import MongoClient #gets the mongo client method
 
 #imports local files
@@ -17,6 +18,7 @@ from mongodb import mongo
 from locGet import geo
 from analyse import analyse
 from collection import collection
+from display import display
 
 
 #gets twitter api and mongo connection
@@ -27,6 +29,7 @@ class Main:
         self.db = db
 
     def menu(self):
+        sleep(1)
         self.userAnswer = input("What would you like to do:"+
         "\n    1)Gather tweets into the database."+
         "\n    2)Find if #X or #Y is used more."+
@@ -43,7 +46,6 @@ class Main:
         elif (self.userAnswer == "3"):
             self.input = input("What term would you like to evaluate: ")
             self.out = anas.tweetMeaning(self.input)
-            time.sleep(.5)
             self.procount = 0
             self.negcount = 0
             for self.i in self.out:
@@ -64,9 +66,13 @@ class Main:
             go.menu()
         return 0
 
+
+dis = display()
+threading.Thread(target=dis.slider, args=("Connecting ",)).start()
 twit = twitterAPI()
 mong = mongo()
 anas = analyse(mong.conn())
-coll = collection(twit.authentigate(True), mong.conn())
+coll = collection(twit.authentigate(False), mong.conn())
 go = Main(twit.authentigate(False),mong.conn())
+dis.stop()
 go.menu() #calls the function that gets tweets and puts them in the DB
