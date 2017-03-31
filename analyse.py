@@ -47,7 +47,7 @@ class analyse:
         threading.Thread(target=dis.spinner, args=("Analysing Tweets ",)).start()
 
         self.search1 = analyse(self.db).counter(term1)
-        self.search2 = analyse(self.db).counter(term2) 
+        self.search2 = analyse(self.db).counter(term2)
         
         dis.stop()
 
@@ -84,15 +84,15 @@ class analyse:
         for self.i in self.dbout:
             self.procounter = 0
             self.negcounter = 0
-            for self.word in self.i["tweet"].split():
+            for self.word in nltk.word_tokenize(self.i["tweet"]):
                 #print("Analysing word: "+self.word)
-                if self.word in self.wordList["good"]:
+                if nltk.PorterStemmer().stem(self.word) in self.wordList["good"]:
                     #print("Found good world")
                     self.procounter = + 1
-                if self.word in self.wordList["bad"]:
+                if nltk.PorterStemmer().stem(self.word) in self.wordList["bad"]:
                     #print("Found bad world")
                     self.negcounter = + 1
-                if self.word in self.wordList["swear"]:
+                if nltk.PorterStemmer().stem(self.word) in self.wordList["swear"]:
                     #print("Found bad world")
                     self.negcounter = + 1
             self.tweetDict = {
@@ -106,6 +106,8 @@ class analyse:
         dis.stop()
         return self.tweetList
         
+
+    
 
 
 # go = analyse(mongo().conn())

@@ -5,6 +5,7 @@ from time import sleep
 import urllib
 import json
 import threading
+import nltk
 import got3 #library that allows search for legacy tweets. Written by Jefferson Henrique (https://github.com/Jefferson-Henrique/GetOldTweets-python). Nothing in the got3 (GetOldTweets3) folder is written by me and I do not claim to have done!
 from pymongo import MongoClient #gets the mongo client method
 

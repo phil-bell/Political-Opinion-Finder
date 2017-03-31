@@ -6,26 +6,29 @@
 
 # print("id:", tweet.author_id)
 # print("username:",tweet.username)
-from time import sleep
-import codecs
-import threading
-stopper = True
+# from time import sleep
+# import codecs
+# import threading
+# stopper = True
 
-def spinner():
-    global stopper
-    while stopper == True:
-        print("Analysing [/]", end="\r")
-        sleep(.1)
-        print("Analysing [—]", end="\r")
-        sleep(.1)
-        print("Analysing [\]", end="\r")
-        sleep(.1)
-        print("Analysing [|]", end="\r")
-        sleep(.1)
-def stop():
-    global stopper
-    sleep(5)
-    stopper = False
+# def spinner():
+#     global stopper
+#     while stopper == True:
+#         print("Analysing [/]", end="\r")
+#         sleep(.1)
+#         print("Analysing [—]", end="\r")
+#         sleep(.1)
+#         print("Analysing [\]", end="\r")
+#         sleep(.1)
+#         print("Analysing [|]", end="\r")
+#         sleep(.1)
+# def stop():
+#     global stopper
+#     sleep(5)
+#     stopper = False
 
-threading.Thread(target=test,args=()).start()
-threading.Thread(target=stop, args=()).start()
+# threading.Thread(target=test,args=()).start()
+# threading.Thread(target=stop, args=()).start()
+
+# import nltk
+# nltk.download()
