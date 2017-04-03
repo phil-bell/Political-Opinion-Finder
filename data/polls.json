@@ -1,64 +1,46 @@
 {
     "polls":[
         {
-            "youGov":{ 
-                "date":{
-                    "since":"2016-06-12",
-                    "untill":"2016-06-13"
-                },
-                "weighted":{
-                    "ramain":744,
-                    "leave":878,
-                    "unsure":205
-                },
-                "unweighted":{
-                    "remain":799,
-                    "leave":867,
-                    "unsure":190
-                }
-            }
+            "name":"youGov",
+            "date":"2016-06-12",
+            "remain":799,
+            "leave":867,
+            "unsure":190
         },
         {
-            "ICM1":{
-                "date":"2016-06-13",
-                "remain":450,
-                "leave":500,
-                "unsure":50
-
-            }
+            "name":"ICM1",
+            "date":"2016-06-13",
+            "remain":450,
+            "leave":500,
+            "unsure":50
         },
         {
-            "ICM2":{
-                "date":"2016-06-13",
-                "remain":880,
-                "leave":980,
-                "unsure":141
-            }
+            "name":"ICM2",
+            "date":"2016-06-13",
+            "remain":880,
+            "leave":980,
+            "unsure":141
         },
         {
-            "comres":{
-                "date":"2016-06-13",
-                "remain":461,
-                "leave":451,
-                "unsure":90
-            }
+            "name":"comres",
+            "date":"2016-06-13",
+            "remain":461,
+            "leave":451,
+            "unsure":90
         },
         {
-            "TNS":{
-                "date":"2016-06-13",
-                "remain":999,
-                "leave":1174,
-                "unsure":324
-            }
+            "name":"TNS",
+            "date":"2016-06-13",
+            "remain":999,
+            "leave":1174,
+            "unsure":324
         },
         {
-            "ORB":{
-                "date":"2016-06-12",
-                "remain":384,
-                "leave":392,
-                "unsure":24                
-            }
-
+            "name":"ORB",
+            "date":"2016-06-12",
+            "remain":384,
+            "leave":392,
+            "unsure":24                
         }
         
     ]

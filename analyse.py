@@ -107,8 +107,23 @@ class analyse:
         return self.tweetList
         
 
-    
+    def getPollData(self):
+        with open("data/polls.json") as filedata:
+            self.data = json.load(filedata)
 
+        for self.i in self.data["polls"]:
+            self.remainTot =+ self.i["remain"]
+            self.leaveTot =+ self.i["leave"]
+            self.unsureTot =+ self.i["unsure"]
+
+        self.pollDict{
+            "remain":self.remainTot,
+            "leave":self.leaveTot,
+            "unsure":self.unsureTot,
+            "remainPer": ((self.remainTot + self.leaveTot + self.unsureTot) / self.remainTot) * 100
+            "leavePer": ((self.remainTot + self.leaveTot + self.unsureTot) / self.leaveTot) * 100
+        }
+        return self.pollDict
 
 # go = analyse(mongo().conn())
 # output = display()
