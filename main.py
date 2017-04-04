@@ -61,6 +61,8 @@ class Main:
                 print("Twitter user are not in favor of:", self.input)
         elif (self.userAnswer == "4"):
             pass
+        elif (self.userAnswer == "5"):
+            anas.twitPollCompare()
         else:
             print("Plase enter a valid input (1,2,3,4,5).")
             go.menu()
