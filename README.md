@@ -27,6 +27,8 @@ python ./main.py
 ```
 Then select what you would like to do from the menu presented to you.
 
+One first run the program will download the necessary [NLTK data](http://www.nltk.org/data.html) (This may take some time).
+
 ## Licence
 Copyright (C) 2017 Philip Bell - All Rights Reserved
 Unauthorized copying of this file, via any medium is strictly prohibited

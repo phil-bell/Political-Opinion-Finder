@@ -13,6 +13,17 @@ from mongodb import mongo
 class analyse:
     def __init__(self,db):
         self.db = db
+        self.dis = display()
+
+    def nlktDownload(self):
+        try:
+            nltk.data.find("tokenizers")
+        except LookupError:
+            #self.dis.spinner("Downloading NLTK Data")
+            print("No NLTK data found, downloading now...")
+            nltk.download("all")
+            #self.dis.stop()
+
 
     #The searcher find tweets in the database with with the search term handed
     #to it with. It will return the tweets the term and number of times it 
@@ -42,17 +53,15 @@ class analyse:
     #   *Second term to compare as a string
     def compare(self,term1,term2):
 
-        dis = display()
-
-        threading.Thread(target=dis.spinner, args=("Analysing Tweets ",)).start()
+        threading.Thread(target=self.dis.spinner, args=("Analysing Tweets ",)).start()
 
         self.search1 = analyse(self.db).counter(term1)
         self.search2 = analyse(self.db).counter(term2)
         
-        dis.stop()
+        self.dis.stop()
 
-        print(term1,":",dis.joiner(self.search1["counter"]))
-        print(term2, ":", dis.joiner(self.search2["counter"]))
+        print(term1,":",self.dis.joiner(self.search1["counter"]))
+        print(term2, ":", self.dis.joiner(self.search2["counter"]))
 
         if(list(self.search2["counter"])[0] > list(self.search1["counter"])[0]):
             return term2
@@ -60,14 +69,14 @@ class analyse:
 
     
     def searcher(self,term):
-        dis = display()
-        threading.Thread(target=dis.spinner, args=("Searching Database ",)).start()
+        
+        threading.Thread(target=self.dis.spinner, args=("Searching Database ",)).start()
         self.tweetList = []
         self.dbout = self.db.tweets.find({})
         for self.i in self.dbout:
             if term in self.i["tweet"]:
                 self.tweetList.append(self.i)
-        dis.stop()
+        self.dis.stop()
         return self.tweetList
 
 
@@ -78,8 +87,7 @@ class analyse:
         with open("data/words.json") as filedata:
             self.wordList = json.load(filedata)
 
-        dis = display()
-        threading.Thread(target=dis.spinner, args=("Analysing Tweets ",)).start()
+        threading.Thread(target=self.dis.spinner, args=("Analysing Tweets ",)).start()
         self.tweetList = []
         for self.i in self.dbout:
             self.procounter = 0
@@ -105,7 +113,7 @@ class analyse:
                 "view":"pro" if self.procounter >= self.negcounter else "neg" #THIS NEEDS TO BE CHANGED
             }
             self.tweetList.append(self.tweetDict)
-        dis.stop()
+        self.dis.stop()
         return self.tweetList
         
 
@@ -159,8 +167,8 @@ class analyse:
 # go = analyse(mongo().conn())
 # output = display()
 # print(go.compare("#remain","#leave"))
-#go = analyse(mongo().conn())
-
+go = analyse(mongo().conn())
+go.nlktDownload()
 #go.tweetMeaning("#remain")
 # out = go.tweetMeaning("#remain")
 
