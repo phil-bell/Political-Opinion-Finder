@@ -100,17 +100,24 @@ class analyse:
                 if nltk.PorterStemmer().stem(self.word) in self.wordList["bad"]:
                     #print("Found bad world")
                     self.negcounter = + 1
-                if nltk.PorterStemmer().stem(self.word) in self.wordList["swear"]:
-                    #print("Found bad world")
-                    self.negcounter = + 1
+                # if nltk.PorterStemmer().stem(self.word) in self.wordList["swear"]:
+                #     print("Found bad world")
+                #     self.negcounter = + 1
                 else:
                     self.neucounter = + 1
+
+            self.view = "unknown"
+            if self.procounter > self.negcounter:
+                self.view = "pro"
+            if self.negcounter > self.procounter:
+                self.view = "neg"
             self.tweetDict = {
                 "id": self.i["_id"],
                 "tweet": self.i["tweet"],
                 "procount": self.procounter,
                 "negcount": self.negcounter,
-                "view":"pro" if self.procounter >= self.negcounter else "neg" #THIS NEEDS TO BE CHANGED
+                # "view":"pro" if self.procounter > self.negcounter else "neg"
+                "view": self.view
             }
             self.tweetList.append(self.tweetDict)
         self.dis.stop()
@@ -142,15 +149,18 @@ class analyse:
 
     def twitPollCompare(self):
         self.pollRes = analyse(self.db).getPollData()
-        self.twitRes = analyse(self.db).tweetMeaning("#brexit")
+        self.twitRes = analyse(self.db).tweetMeaning("remain")
 
         self.procount = 0
         self.negcount = 0
+        self.nullcount = 0
         for self.i in self.twitRes:
             if (self.i["view"] == "pro"):
                 self.procount = self.procount + 1
-            else:
+            if (self.i["view"] == "neg"):
                 self.negcount = self.negcount + 1
+            else:
+                self.nullcount = self. nullcount + 1
         
         self.twitRemainPer = (self.procount / (self.procount + self.negcount)) * 100
         self.twitLeavePer = 100 - self.twitRemainPer
@@ -160,15 +170,15 @@ class analyse:
         "\n    Leave:",round(self.pollRes["leavePer"],1),"% ({})".format(self.pollRes["leave"]),
         "\nTwitter Results:",
         "\n    Remain:",round(self.twitRemainPer,1),"% ({})".format(self.procount),
-        "\n    Leave:",round(self.twitLeavePer,1),"% ({})".format(self.negcount)
+        "\n    Leave:",round(self.twitLeavePer,1),"% ({})".format(self.negcount),
+        "\n    Null:",self.nullcount
         )
-
 
 # go = analyse(mongo().conn())
 # output = display()
 # print(go.compare("#remain","#leave"))
-go = analyse(mongo().conn())
-go.nlktDownload()
+# go = analyse(mongo().conn())
+# go.nlktDownload()
 #go.tweetMeaning("#remain")
 # out = go.tweetMeaning("#remain")
 
