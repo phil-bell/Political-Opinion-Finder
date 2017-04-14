@@ -74,7 +74,9 @@ class analyse:
         self.tweetList = []
         self.dbout = self.db.tweets.find({})
         for self.i in self.dbout:
-            if term in self.i["tweet"]:
+            if term in self.i["tweet"].lower():
+                self.tweetList.append(self.i)
+            if "#"+term in self.i["tweet"]:
                 self.tweetList.append(self.i)
         self.dis.stop()
         return self.tweetList
@@ -94,17 +96,20 @@ class analyse:
             self.negcounter = 0
             for self.word in nltk.word_tokenize(self.i["tweet"]):
                 #print("Analysing word: "+self.word)
-                if nltk.PorterStemmer().stem(self.word) in self.wordList["good"]:
-                    #print("Found good world")
-                    self.procounter = + 1
-                if nltk.PorterStemmer().stem(self.word) in self.wordList["bad"]:
-                    #print("Found bad world")
-                    self.negcounter = + 1
-                # if nltk.PorterStemmer().stem(self.word) in self.wordList["swear"]:
-                #     print("Found bad world")
-                #     self.negcounter = + 1
-                else:
-                    self.neucounter = + 1
+                try:
+                    if nltk.PorterStemmer().stem(self.word) in self.wordList["good"]:
+                        #print("Found good world")
+                        self.procounter = + 1
+                    if nltk.PorterStemmer().stem(self.word) in self.wordList["bad"]:
+                        #print("Found bad world")
+                        self.negcounter = + 1
+                    # if nltk.PorterStemmer().stem(self.word) in self.wordList["swear"]:
+                    #     print("Found bad world")
+                    #     self.negcounter = + 1
+                    else:
+                        self.neucounter = + 1
+                except IndexError:
+                    print("Ignoring tweet:",self.i["tweet"])
 
             self.view = "unknown"
             if self.procounter > self.negcounter:
@@ -149,12 +154,14 @@ class analyse:
 
     def twitPollCompare(self):
         self.pollRes = analyse(self.db).getPollData()
-        self.twitRes = analyse(self.db).tweetMeaning("remain")
+        self.twitRes = analyse(self.db).tweetMeaning("brexit")
 
         self.procount = 0
         self.negcount = 0
         self.nullcount = 0
+        self.tot = 0
         for self.i in self.twitRes:
+            self.tot = self.tot+1
             if (self.i["view"] == "pro"):
                 self.procount = self.procount + 1
             if (self.i["view"] == "neg"):
@@ -171,8 +178,27 @@ class analyse:
         "\nTwitter Results:",
         "\n    Remain:",round(self.twitRemainPer,1),"% ({})".format(self.procount),
         "\n    Leave:",round(self.twitLeavePer,1),"% ({})".format(self.negcount),
-        "\n    Null:",self.nullcount
+        "\n    Null:",self.nullcount,
+        "\n    Total:",self.tot
         )
+
+
+    # def test(self):
+    #     # self.out = analyse(self.db).searcher("")
+    #     # print (len(self.out))
+    #     self.tweetList = []
+    #     self.dbout = self.db.tweets.find({})
+    #     for self.i in self.dbout:
+    #         self.tweetList.append(self.i)
+        
+        
+    #     self.counter = 0
+    #     for self.i in self.tweetList:
+    #         if "brexit" not in self.i["tweet"].lower():
+    #             print(self.i["tweet"],"\n\n")
+    #             self.counter = self.counter + 1
+    #     print(len(self.tweetList))
+    #     print(self.counter)
 
 # go = analyse(mongo().conn())
 # output = display()
@@ -210,3 +236,6 @@ class analyse:
 #         self.tweetDict.append("pro")
 #     else:
 #         self.tweetDict.append("neg")
+
+
+# analyse(mongo().conn()).test()
