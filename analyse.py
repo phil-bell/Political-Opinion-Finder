@@ -3,8 +3,11 @@ import codecs
 import json
 import nltk
 import threading
+import random
 from time import sleep
 from pprint import pprint
+from collections import Counter
+from nltk.corpus import pros_cons
 
 from display import display
 from mongodb import mongo
@@ -23,6 +26,18 @@ class analyse:
             print("No NLTK data found, downloading now...")
             nltk.download("all")
             #self.dis.stop()
+
+    def dataSetOpinions(self):
+        self.document = [(list(pros_cons.words(fileid)),self.category)
+                            for self.category in pros_cons.categories()
+                            for fileid in pros_cons.fileids(self.category)]
+        random.shuffle(self.document)
+
+        self.all = nltk.FreqDist(self.i.lower() for self.i in pros_cons.words())
+        word_features = [self.i for (self.i,self.c)in self.all.most_common(3000)]
+
+        print(word_features)
+
 
 
     #The searcher find tweets in the database with with the search term handed
@@ -152,25 +167,57 @@ class analyse:
         return self.pollDict
 
 
+    #This finds the most common hashtags used in the database
+    def getHashtags(self):
+        self.twitRes = analyse(self.db).tweetMeaning("brexit")
+
+        threading.Thread(target=self.dis.spinner, args=("Counting Hashtags ",)).start()
+        self.f = open("tweets.txt", "w")
+
+        self.hashList = []
+
+        for self. i in self.twitRes:
+            for self.j in self.i["tweet"].split():
+                if self.j[0] == "#":
+                    self.hashList.append(self.j.lower())
+
+        for self.i in Counter(self.hashList).most_common(100):
+            try:
+                self.f.write(self.i[0]+"\n")
+            except UnicodeEncodeError:
+                print("UnicodeEncodeError")
+
+        self.dis.stop()
+
     def twitPollCompare(self):
         self.pollRes = analyse(self.db).getPollData()
         self.twitRes = analyse(self.db).tweetMeaning("brexit")
 
-        self.procount = 0
-        self.negcount = 0
-        self.nullcount = 0
-        self.tot = 0
+        threading.Thread(target=self.dis.spinner, args=("Analysing Tweets ",)).start()
+
+        self.remainList = []
+        self.leaveList = []
+        self.nullList = []
+
+        self.remainHash = ["remain", "strongerin", "voteremain", "bremain","brexitthemovie","remainineu","scotland","votein","in","labourinforbritain","eureflondon","indyref"]
+        self.leaveHash = ["voteleave", "leaveeu", "takecontrol", "leave", "voteout", "betteroffout","out","takebackcontrol"]
+
         for self.i in self.twitRes:
-            self.tot = self.tot+1
-            if (self.i["view"] == "pro"):
-                self.procount = self.procount + 1
-            if (self.i["view"] == "neg"):
-                self.negcount = self.negcount + 1
+            if any(self.term in self.i["tweet"].lower() for self.term in self.remainHash):
+                self.remainList.append(self.i)
+            elif any(self.term in self.i["tweet"].lower() for self.term in self.leaveHash):
+                self.leaveList.append(self.i)
             else:
-                self.nullcount = self. nullcount + 1
+                self.nullList.append(self.i)
+
+        self.procount = len(self.remainList)
+        self.negcount = len(self.leaveList)
+        self.nullcount = len(self.nullList)
         
         self.twitRemainPer = (self.procount / (self.procount + self.negcount)) * 100
         self.twitLeavePer = 100 - self.twitRemainPer
+        
+        self.dis.stop()
 
         print ("Poll Results:",
         "\n    Remain:", round(self.pollRes["remainPer"],1), "% ({})".format(self.pollRes["remain"]),
@@ -179,7 +226,6 @@ class analyse:
         "\n    Remain:",round(self.twitRemainPer,1),"% ({})".format(self.procount),
         "\n    Leave:",round(self.twitLeavePer,1),"% ({})".format(self.negcount),
         "\n    Null:",self.nullcount,
-        "\n    Total:",self.tot
         )
 
 
@@ -238,4 +284,13 @@ class analyse:
 #         self.tweetDict.append("neg")
 
 
-# analyse(mongo().conn()).test()
+analyse(mongo().conn()).dataSetOpinions()
+
+# The top 3000 most frequent words should be obtained by:
+
+# all_words = nltk.FreqDist(w.lower() for w in movie_reviews.words())
+# word_features = [w for (w, c) in all_words.most_common(3000)]
+
+# If you use this as the feature, the accuracy will almost always be above 80 % and can occasionally hit 90 % .
+
+# And thanks for the video. I have really found some cool stuff in them.﻿

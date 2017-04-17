@@ -34,8 +34,7 @@ class Main:
         "\n    1)Gather tweets into the database."+
         "\n    2)Find if #X or #Y is used more."+
         "\n    3)Find Twitters opinion on a hashtag"+
-        "\n    4)Estimate what people will vote from tweets."+
-        "\n    5)Compare twitter opinion to poll opinions."+
+        "\n    4)Compare twitter opinion to poll opinions."+
         "\nEnter: ")
         if (self.userAnswer == "1"):
             coll.getTweets("#brexit")
@@ -60,11 +59,9 @@ class Main:
             else:
                 print("Twitter user are not in favor of:", self.input)
         elif (self.userAnswer == "4"):
-            pass
-        elif (self.userAnswer == "5"):
             anas.twitPollCompare()
         else:
-            print("Plase enter a valid input (1,2,3,4,5).")
+            print("Plase enter a valid input (1,2,3,4).")
             go.menu()
         return 0
 
