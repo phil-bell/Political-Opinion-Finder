@@ -7,7 +7,8 @@ import random
 from time import sleep
 from pprint import pprint
 from collections import Counter
-from nltk.corpus import pros_cons
+from nltk.corpus import movie_reviews
+from nltk.classify.scikitlearn import SklearnClassifier
 
 from display import display
 from mongodb import mongo
@@ -27,18 +28,33 @@ class analyse:
             nltk.download("all")
             #self.dis.stop()
 
+    def featureFind(self,doc,wf):
+        self.words = set(doc)
+        self.feat = {}
+        for self.i in wf:
+            self.feat[self.i] = (self.i in self.words)
+        return self.feat
+
     def dataSetOpinions(self):
-        self.document = [(list(pros_cons.words(fileid)),self.category)
-                            for self.category in pros_cons.categories()
-                            for fileid in pros_cons.fileids(self.category)]
+        self.document = [(list(movie_reviews.words(fileid)),self.category)
+                            for self.category in movie_reviews.categories()
+                            for fileid in movie_reviews.fileids(self.category)]
         random.shuffle(self.document)
 
-        self.all = nltk.FreqDist(self.i.lower() for self.i in pros_cons.words())
-        word_features = [self.i for (self.i,self.c)in self.all.most_common(3000)]
+        self.all = nltk.FreqDist(self.i.lower() for self.i in movie_reviews.words())
+        self.wordFeatures = [self.i for (self.i,self.c)in self.all.most_common(3000)]
 
-        print(word_features)
+        # wordFeatures = [w[0] for w in sorted(all_words.items(), key=lambda (k, v):v, reverse=True)[:3000]]
 
+        self.featset = [(go.featureFind(self.r,self.wordFeatures),self.category) for (self.r,self.category) in self.document]
 
+        self.trainSet = self.featset[:1000]
+        self.testSet = self.featset[1000:]
+
+        self.classifier = nltk.NaiveBayesClassifier.train(self.trainSet)
+        print("Accuracy:",nltk.classify.accuracy(self.classifier,self.testSet)*100,"%")
+        # self.classifier.show_most_informative_features(10)
+        
 
     #The searcher find tweets in the database with with the search term handed
     #to it with. It will return the tweets the term and number of times it 
@@ -284,7 +300,8 @@ class analyse:
 #         self.tweetDict.append("neg")
 
 
-analyse(mongo().conn()).dataSetOpinions()
+go = analyse(mongo().conn())
+go.dataSetOpinions()
 
 # The top 3000 most frequent words should be obtained by:
 
