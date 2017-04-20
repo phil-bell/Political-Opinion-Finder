@@ -8,20 +8,20 @@ The motivation of this project is to investigate into the difference between pol
 
 ## Installation
 
-Clone the repositary, install [Python 3](https://www.python.org/downloads/) and the following Python libraries using `pip`:
+Clone the repositary, install [Python 3](https://www.python.org/downloads/) and the following Python libraries using `pip install`:
 * `Tweepy` Twitter API library for accessing Twitter
 * `pymongo` MongoDB library for using MongoDB
 * `codecs` Encoding library for encoding the tweets
 * `nltk` Natural language library for analysing meaning of tweets
 * `tqdm`
 
-Install the following from thier `.whl` in the packages folder using `pip`:
+Install the following from their `.whl` from the [Windows Binery](http://www.lfd.uci.edu/~gohlke/pythonlibs/) site using `pip install`:
 * `numpy`
 * `scipy`
 * `scit_learn`
 * `sklearn`
 
-Working version for Windows are not availible on pip(I believe they work on Linux).
+This is for Windows(I believe they work with normal `pip install` on Linux).
 
 Create a JSON file with users MongoDB server credentials, use the [example](https://github.com/philhabell/Political-Opinion-Finder/blob/master/credentials/mongoCredentialsExample.json) file as a guide. If using a local server download [MongoDB](https://www.mongodb.com/download-center?jmp=nav) and leave `mongoURL` empty in the JSON file.
 
@@ -37,6 +37,8 @@ python ./main.py
 Then select what you would like to do from the menu presented to you.
 
 On first run the program will download the necessary [NLTK data](http://www.nltk.org/data.html) (This may take some time).
+It is advised to use `Gather tweets` option on first run so there are tweets in the database.
+The calulation of twitter vs poll opinion difference does take a long time (can be hours on a slower system).
 
 ## Licence
 Copyright (C) 2017 Philip Bell - All Rights Reserved

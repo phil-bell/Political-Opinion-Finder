@@ -30,6 +30,7 @@ class Main:
 
     def menu(self):
         sleep(1)
+        anas.nltkDownload()
         self.userAnswer = input("What would you like to do:"+
         "\n    1)Gather tweets into the database."+
         "\n    2)Find if #X or #Y is used more."+

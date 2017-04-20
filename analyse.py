@@ -22,7 +22,7 @@ class analyse:
         self.db = db
         self.dis = display()
 
-    def nlktDownload(self):
+    def nltkDownload(self):
         try:
             nltk.data.find("tokenizers")
         except LookupError:
