@@ -9,6 +9,8 @@ from pprint import pprint
 from collections import Counter
 from nltk.corpus import movie_reviews
 from nltk.classify.scikitlearn import SklearnClassifier
+from bson import Binary, Code
+from bson.json_util import dumps
 
 from display import display
 from mongodb import mongo
@@ -208,9 +210,9 @@ class analyse:
 
     def twitPollCompare(self):
         self.pollRes = analyse(self.db).getPollData()
-        self.twitRes = analyse(self.db).tweetMeaning("brexit")
+        self.twitRes = analyse(self.db).searcher("brexit")
 
-        threading.Thread(target=self.dis.spinner, args=("Analysing Tweets ",)).start()
+        threading.Thread(target=self.dis.spinner, args=("Grouping by Hashtag ",)).start()
 
         self.remainList = []
         self.leaveList = []
@@ -228,8 +230,12 @@ class analyse:
             else:
                 self.unknList.append(self.i)
 
+        self.dis.stop()
+
+        # threading.Thread(target=self.dis.spinner, args=("Checking remain tweet sentiment",)).start()
 
         for self.i in self.remainList:
+            print("Remain list items remaing:",len(self.remainList),end="\r")
             self.sentiment = sent.ment(self.i["tweet"])
             if self.sentiment[1] > 50:
                 if self.sentiment[0] == "neg":
@@ -237,9 +243,16 @@ class analyse:
                     self.remainList.remove(self.i)
             else:
                 self.nullList.append(self.i)
-                self.remainList.remove(self.i)            
+                self.remainList.remove(self.i)      
+            # break   
+        print("Complete...                                                  ")
+        # self.dis.stop()
+
+        # threading.Thread(target=self.dis.spinner, args=("Checking leave tweet sentiment",)).start()  
+     
 
         for self.i in self.leaveList:
+            print("Leave list items remaing:",len(self.leaveList),end="\r")
             self.sentiment = sent.ment(self.i["tweet"])
             if self.sentiment[1] > 50:
                 if self.sentiment[0] == "neg":
@@ -248,8 +261,15 @@ class analyse:
             else:
                 self.unknList.append(self.i)
                 self.leaveList.remove(self.i)
+            # break
+
+        print("Complete...                                                  ")
+        # self.dis.stop()
+
+        # threading.Thread(target=self.dis.spinner, args=("Checking unknown tweet sentiment",)).start()
 
         for self.i in self.unknList:
+            print("Unknown list items remaing:",len(self.unknList),end="\r")
             self.sentiment = sent.ment(self.i["tweet"])
             if self.sentiment[1] > 50:
                 if self.sentiment[0] == "pos":
@@ -261,17 +281,57 @@ class analyse:
             else:
                 self.nullList.append(self.i)
                 self.unknList.remove(self.i)
+            # break
 
+        print("Complete...                                                  ")
+        # self.dis.stop()
 
         self.procount = len(self.remainList)
         self.negcount = len(self.leaveList)
         self.nullcount = len(self.nullList)
+        self.unkncount = len(self.unknList)
         
         self.twitRemainPer = (self.procount / (self.procount + self.negcount)) * 100
         self.twitLeavePer = 100 - self.twitRemainPer
-        
-        self.dis.stop()
 
+        self.data = {
+            "remainCount":self.procount,
+            "leaveCount":self.negcount,
+            "unknCount":self.unkncount,
+            "nullcount":self.nullcount
+            #"remainList":self.remainList[1],
+            #"leaveList":self.leaveList[1]
+            #"nullList":self.nullList[1]
+        }
+
+        print(self.data)
+        with open("data/results.json","w") as self.file:
+            json.dump(self.data,self.file)
+
+        self.file.close()
+
+        print ("Poll Results:",
+        "\n    Remain:", round(self.pollRes["remainPer"],1), "% ({})".format(self.pollRes["remain"]),
+        "\n    Leave:",round(self.pollRes["leavePer"],1),"% ({})".format(self.pollRes["leave"]),
+        "\nTwitter Results:",
+        "\n    Remain:",round(self.twitRemainPer,1),"% ({})".format(self.procount),
+        "\n    Leave:",round(self.twitLeavePer,1),"% ({})".format(self.negcount),
+        "\n    Null:",self.nullcount,
+        )
+
+    def outOldData(self):
+        with open("data/results.json","r") as self.file:
+            self.data = json.load(self.file)
+
+        self.procount = self.data["remainCount"]
+        self.negcount = self.data["leaveCount"]
+        self.nullcount = self.data["nullcount"]
+
+        self.pollRes = analyse(self.db).getPollData()
+
+        self.twitRemainPer = (self.procount / (self.procount + self.negcount)) * 100
+        self.twitLeavePer = 100 - self.twitRemainPer
+        
         print ("Poll Results:",
         "\n    Remain:", round(self.pollRes["remainPer"],1), "% ({})".format(self.pollRes["remain"]),
         "\n    Leave:",round(self.pollRes["leavePer"],1),"% ({})".format(self.pollRes["leave"]),
@@ -337,8 +397,8 @@ class analyse:
 #         self.tweetDict.append("neg")
 
 
-go = analyse(mongo().conn())
-go.dataSetOpinions()
+# go = analyse(mongo().conn())
+# go.dataSetOpinions()
 
 # The top 3000 most frequent words should be obtained by:
 

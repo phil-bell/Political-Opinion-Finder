@@ -41,7 +41,6 @@ class sent(ClassifierI):
 
         return self.features
     def ment(text):
-
         doc = pickle.load(open("pickle/documents.pickle", "rb"))
         wordFeat = pickle.load(open("pickle/word_features5k.pickle", "rb"))
         featSet = pickle.load(open("pickle/featuresets.pickle", "rb"))

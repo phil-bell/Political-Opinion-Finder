@@ -13,6 +13,7 @@ Clone the repositary, install [Python 3](https://www.python.org/downloads/) and 
 * `pymongo` MongoDB library for using MongoDB
 * `codecs` Encoding library for encoding the tweets
 * `nltk` Natural language library for analysing meaning of tweets
+* `tqdm`
 
 Install the following from thier `.whl` in the packages folder using `pip`:
 * `numpy`

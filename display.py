@@ -1,10 +1,13 @@
 #The display class include methods that display things to
 #the screen for the user.
 from time import sleep
+import tqdm
+import threading
 
 class display:
     def __init__(self):
         self.stopper = True
+        self.go = False
 
     #This creates a dividers must be passed:
     #   * length of the divider
@@ -97,4 +100,4 @@ class display:
             sleep(.07)
             print(message, "[=-------]", end="\r")
             sleep(.07)
-        print("Connected                       ")
+        print("Connected                                                                      ")
