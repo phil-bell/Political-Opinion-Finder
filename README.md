@@ -8,11 +8,19 @@ The motivation of this project is to investigate into the difference between pol
 
 ## Installation
 
-Clone the repositary, install [Python 3](https://www.python.org/downloads/) and the following Python libraries:
+Clone the repositary, install [Python 3](https://www.python.org/downloads/) and the following Python libraries using `pip`:
 * `Tweepy` Twitter API library for accessing Twitter
 * `pymongo` MongoDB library for using MongoDB
 * `codecs` Encoding library for encoding the tweets
 * `nltk` Natural language library for analysing meaning of tweets
+
+Install the following from thier `.whl` in the packages folder using `pip`:
+* `numpy`
+* `scipy`
+* `scit_learn`
+* `sklearn`
+
+Working version for Windows are not availible on pip(I believe they work on Linux).
 
 Create a JSON file with users MongoDB server credentials, use the [example](https://github.com/philhabell/Political-Opinion-Finder/blob/master/credentials/mongoCredentialsExample.json) file as a guide. If using a local server download [MongoDB](https://www.mongodb.com/download-center?jmp=nav) and leave `mongoURL` empty in the JSON file.
 

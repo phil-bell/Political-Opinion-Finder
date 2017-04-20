@@ -12,6 +12,7 @@ from nltk.classify.scikitlearn import SklearnClassifier
 
 from display import display
 from mongodb import mongo
+from sentiment import sent
 
 #The analyse class contain  methods that analyse the data in the database
 class analyse:
@@ -28,32 +29,32 @@ class analyse:
             nltk.download("all")
             #self.dis.stop()
 
-    def featureFind(self,doc,wf):
-        self.words = set(doc)
-        self.feat = {}
-        for self.i in wf:
-            self.feat[self.i] = (self.i in self.words)
-        return self.feat
+    # def featureFind(self,doc,wf):
+    #     self.words = set(doc)
+    #     self.feat = {}
+    #     for self.i in wf:
+    #         self.feat[self.i] = (self.i in self.words)
+    #     return self.feat
 
-    def dataSetOpinions(self):
-        self.document = [(list(movie_reviews.words(fileid)),self.category)
-                            for self.category in movie_reviews.categories()
-                            for fileid in movie_reviews.fileids(self.category)]
-        random.shuffle(self.document)
+    # def dataSetOpinions(self):
+    #     self.document = [(list(movie_reviews.words(fileid)),self.category)
+    #                         for self.category in movie_reviews.categories()
+    #                         for fileid in movie_reviews.fileids(self.category)]
+    #     random.shuffle(self.document)
 
-        self.all = nltk.FreqDist(self.i.lower() for self.i in movie_reviews.words())
-        self.wordFeatures = [self.i for (self.i,self.c)in self.all.most_common(3000)]
+    #     self.all = nltk.FreqDist(self.i.lower() for self.i in movie_reviews.words())
+    #     self.wordFeatures = [self.i for (self.i,self.c)in self.all.most_common(3000)]
 
-        # wordFeatures = [w[0] for w in sorted(all_words.items(), key=lambda (k, v):v, reverse=True)[:3000]]
+    #     # wordFeatures = [w[0] for w in sorted(all_words.items(), key=lambda (k, v):v, reverse=True)[:3000]]
 
-        self.featset = [(go.featureFind(self.r,self.wordFeatures),self.category) for (self.r,self.category) in self.document]
+    #     self.featset = [(go.featureFind(self.r,self.wordFeatures),self.category) for (self.r,self.category) in self.document]
 
-        self.trainSet = self.featset[:1000]
-        self.testSet = self.featset[1000:]
+    #     self.trainSet = self.featset[:1000]
+    #     self.testSet = self.featset[1000:]
 
-        self.classifier = nltk.NaiveBayesClassifier.train(self.trainSet)
-        print("Accuracy:",nltk.classify.accuracy(self.classifier,self.testSet)*100,"%")
-        # self.classifier.show_most_informative_features(10)
+    #     self.classifier = nltk.NaiveBayesClassifier.train(self.trainSet)
+    #     print("Accuracy:",nltk.classify.accuracy(self.classifier,self.testSet)*100,"%")
+    #     # self.classifier.show_most_informative_features(10)
         
 
     #The searcher find tweets in the database with with the search term handed
@@ -213,10 +214,11 @@ class analyse:
 
         self.remainList = []
         self.leaveList = []
+        self.unknList = []
         self.nullList = []
 
-        self.remainHash = ["remain", "strongerin", "voteremain", "bremain","brexitthemovie","remainineu","scotland","votein","in","labourinforbritain","eureflondon","indyref"]
-        self.leaveHash = ["voteleave", "leaveeu", "takecontrol", "leave", "voteout", "betteroffout","out","takebackcontrol"]
+        self.remainHash = ["#remain", "#strongerin", "#voteremain", "#bremain","#brexitthemovie","#remainineu","#scotland","#votein","#in","#labourinforbritain","#eureflondon","#indyref"]
+        self.leaveHash = ["#voteleave", "#leaveeu", "#takecontrol", "#leave", "#voteout", "#betteroffout","#out","#takebackcontrol"]
 
         for self.i in self.twitRes:
             if any(self.term in self.i["tweet"].lower() for self.term in self.remainHash):
@@ -224,7 +226,42 @@ class analyse:
             elif any(self.term in self.i["tweet"].lower() for self.term in self.leaveHash):
                 self.leaveList.append(self.i)
             else:
+                self.unknList.append(self.i)
+
+
+        for self.i in self.remainList:
+            self.sentiment = sent.ment(self.i["tweet"])
+            if self.sentiment[1] > 50:
+                if self.sentiment[0] == "neg":
+                    self.leaveList.append(self.i)
+                    self.remainList.remove(self.i)
+            else:
                 self.nullList.append(self.i)
+                self.remainList.remove(self.i)            
+
+        for self.i in self.leaveList:
+            self.sentiment = sent.ment(self.i["tweet"])
+            if self.sentiment[1] > 50:
+                if self.sentiment[0] == "neg":
+                    self.remainList.append(self.i)
+                    self.leaveList.remove(self.i)
+            else:
+                self.unknList.append(self.i)
+                self.leaveList.remove(self.i)
+
+        for self.i in self.unknList:
+            self.sentiment = sent.ment(self.i["tweet"])
+            if self.sentiment[1] > 50:
+                if self.sentiment[0] == "pos":
+                    self.leaveList.append(self.i)
+                    self.unknList.remove(self.i)
+                else:
+                    self.remainList.append(self.i)
+                    self.unknList.remove(self.i)
+            else:
+                self.nullList.append(self.i)
+                self.unknList.remove(self.i)
+
 
         self.procount = len(self.remainList)
         self.negcount = len(self.leaveList)

@@ -32,3 +32,7 @@
 
 # import nltk
 # nltk.download()
+
+from sentiment import sent
+
+print(sent.ment("I really love it when this happens"))

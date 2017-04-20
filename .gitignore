@@ -1,5 +1,9 @@
 apiCredentials.json
 *.pyc
+*.pickle
+*.whl
 __pycache__/
 .vs/
 mongoCredentials.json
+pickle/
+packages/
