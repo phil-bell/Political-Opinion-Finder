@@ -42,10 +42,10 @@ The calulation of twitter vs poll opinion difference does take a long time (can 
 
 ## Licence
 Copyright (C) 2017 Philip Bell - All Rights Reserved
-Unauthorized copying of this file, via any medium is strictly prohibited
+Unauthorized copying of this file, via any medium is strictly prohibited.
 
-Proprietary and confidential
+Proprietary and confidential.
 
-Written by Philip Bell <philhabell@gmail.com>, March 2017
+Written by Philip Bell <philhabell@gmail.com>, March 2017.
 
 **[Back to top](#political-opinion-finder)**
