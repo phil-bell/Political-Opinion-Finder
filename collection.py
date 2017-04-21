@@ -24,12 +24,12 @@ class collection:
         self.db = db
 
     #gets tweets from hashtag "#brexit" and puts them in the mongo database
-    def getTweets(self, hashtag):
+    def getTweets(self, hashtag, startDate, endDate):
 
         dis = display()
 
         threading.Thread(target=dis.spinner, args=("Scrapping Tweets ",)).start()
-        self.tweetCriteria = got3.manager.TweetCriteria().setQuerySearch(hashtag).setSince("2016-06-12").setUntil("2016-06-13").setMaxTweets(1)
+        self.tweetCriteria = got3.manager.TweetCriteria().setQuerySearch(hashtag).setSince(startDate).setUntil(endDate).setMaxTweets(1)
         self.brexitTweets = got3.manager.TweetManager.getTweets(self.tweetCriteria)
 
         dis.stop()
@@ -62,7 +62,7 @@ class collection:
                 "\n    Following:", self.friends,)  # shows tweets being added to the DB
 
             #adds the data to the database
-            self.results = self.db.tweetsEXAMPLE.insert_one(
+            self.results = self.db.tweets.insert_one(
                 {
                     "userID": self.uid,
                     "tweetID": self.tweetid,

@@ -39,7 +39,7 @@ class Main:
         "\n    5)Show stored twitter vs poll analyse data."
         "\nEnter: ")
         if (self.userAnswer == "1"):
-            coll.getTweets("#brexit")
+            coll.getTweets("#brexit","2016-06-12","2016-06-13")
         elif (self.userAnswer == "2"):
             self.u1 = input("First term: ")
             self.u2 = input("Second term: ")
