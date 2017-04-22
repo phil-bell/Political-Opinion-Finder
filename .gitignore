@@ -5,5 +5,3 @@ apiCredentials.json
 __pycache__/
 .vs/
 mongoCredentials.json
-pickle/
-packages/

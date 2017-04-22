@@ -235,6 +235,7 @@ class analyse:
         # threading.Thread(target=self.dis.spinner, args=("Checking remain tweet sentiment",)).start()
 
         for self.i in self.remainList:
+            print("                                               ",end="\r")
             print("Remain list items remaing:",len(self.remainList),end="\r")
             self.sentiment = sent.ment(self.i["tweet"])
             if self.sentiment[1] > 50:
