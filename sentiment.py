@@ -10,27 +10,41 @@ from statistics import mode
 from nltk.tokenize import word_tokenize
 from trainer import trainClassifier
 
+# this class finds the sentiment of tweets, it used 7
+# machine learning sentiment classifiers in a 
+# democracy vote to find the sentiment.
 class sent(ClassifierI):
     def __init__(self, *classifiers):
         self._classifiers = classifiers
 
-    def classify(self, features):
+    # this classifies the vote and returns the mode
+    # of the result.
+    # must be handed:
+    #     *featured words
+    def clify(self, features):
         self.votes = []
         for self.i in self._classifiers:
-            self.j = self.i.classify(features)
+            self.j = self.i.clify(features)
             self.votes.append(self.j)
         return mode(self.votes)
 
-    def confidence(self, features):
+    # find the confidents of results
+    # must be handed:
+    #     *featured words
+    def conf(self, features):
         self.votes = []
         for self.i in self._classifiers:
-            self.j = self.i.classify(features)
+            self.j = self.i.clify(features)
             self.votes.append(self.j)
 
         self.choice_votes = self.votes.count(mode(self.votes))
         self.conf = self.choice_votes / len(self.votes)
         return self.conf
 
+    # find the features of document
+    # must be handed:
+    #     *document to find feature of
+    #     *word features
     def featureFind(self,document,wf):
         self.words = word_tokenize(document)
         self.features = {}
@@ -38,6 +52,12 @@ class sent(ClassifierI):
             self.features[self.i] = (self.i in self.words)
 
         return self.features
+
+    # finds the setiment of tweet passed to it. Uses 7
+    # machine learning sentiment classifiers which then 
+    # vote to improve accuracy.
+    # must be handed:
+    #     *tweet to find sentiment    
     def ment(text):
         try:
             doc = pickle.load(open("pickle/doc.pickle", "rb"))
@@ -57,6 +77,6 @@ class sent(ClassifierI):
 
         vote = sent(ONB,MNB,BNB,LR,LSVC,SGDC)
         feats = sent().featureFind(text,wordFeat)
-        out = (voted.confidence(feats))*100
+        out = (voted.conf(feats))*100
         # out = str(out)+"%"
-        return voted.classify(feats),out
+        return voted.clify(feats),out

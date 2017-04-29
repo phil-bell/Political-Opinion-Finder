@@ -14,7 +14,7 @@ class display:
     #   * what the divider is made of, "=" for example
     def divider(self, length, string):
         for self.i in range(0, length):
-            string = string + "="
+            string = string + string
         print(string)
 
     #The joiner removes and brackets and quotation marks from
@@ -101,3 +101,10 @@ class display:
             print(message, "[=-------]", end="\r")
             sleep(.07)
         print("Connected                                                                      ")
+    #method that makes a loading bar, is passed an lenght of time in minutes
+
+    def loadingBar(self, time):
+        for i in range(101):
+            print("\rProgress: [{0:100s}] {1:.1f}%".format(
+                '#' * int(i * 1), i * 1), end="", flush=True)
+            sleep((60 * time) / 100)

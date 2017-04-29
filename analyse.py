@@ -16,7 +16,7 @@ from display import display
 from mongodb import mongo
 from sentiment import sent
 
-#The analyse class contain  methods that analyse the data in the database
+# The analyse class contain  methods that analyse the data in the database
 class analyse:
     def __init__(self,db):
         self.db = db
@@ -30,40 +30,13 @@ class analyse:
             print("No NLTK data found, downloading now...")
             nltk.download("all")
             #self.dis.stop()
-
-    # def featureFind(self,doc,wf):
-    #     self.words = set(doc)
-    #     self.feat = {}
-    #     for self.i in wf:
-    #         self.feat[self.i] = (self.i in self.words)
-    #     return self.feat
-
-    # def dataSetOpinions(self):
-    #     self.document = [(list(movie_reviews.words(fileid)),self.category)
-    #                         for self.category in movie_reviews.categories()
-    #                         for fileid in movie_reviews.fileids(self.category)]
-    #     random.shuffle(self.document)
-
-    #     self.all = nltk.FreqDist(self.i.lower() for self.i in movie_reviews.words())
-    #     self.wordFeatures = [self.i for (self.i,self.c)in self.all.most_common(3000)]
-
-    #     # wordFeatures = [w[0] for w in sorted(all_words.items(), key=lambda (k, v):v, reverse=True)[:3000]]
-
-    #     self.featset = [(go.featureFind(self.r,self.wordFeatures),self.category) for (self.r,self.category) in self.document]
-
-    #     self.trainSet = self.featset[:1000]
-    #     self.testSet = self.featset[1000:]
-
-    #     self.classifier = nltk.NaiveBayesClassifier.train(self.trainSet)
-    #     print("Accuracy:",nltk.classify.accuracy(self.classifier,self.testSet)*100,"%")
-    #     # self.classifier.show_most_informative_features(10)
         
 
-    #The searcher find tweets in the database with with the search term handed
-    #to it with. It will return the tweets the term and number of times it 
-    #apeares in the database in a dictionary.
-    #It must be handed:
-    #   *a search term as a string
+    # The searcher find tweets in the database with with the search term handed
+    # to it with. It will return the tweets the term and number of times it 
+    # apeares in the database in a dictionary.
+    # It must be handed:
+    #    *a search term as a string
     def counter(self,term):
         self.incremetor = 0
         self.tweetList = self.db.tweets.find({})
@@ -80,11 +53,11 @@ class analyse:
 
         return self.out
 
-    #compare() compairs if people tweet about one thing or another more
-    #it returns the winner.
-    #It must be handed:
-    #   *First term to compare as a string
-    #   *Second term to compare as a string
+    # compare() compairs if people tweet about one thing or another more
+    # it returns the winner.
+    # It must be handed:
+    #    *First term to compare as a string
+    #    *Second term to compare as a string
     def compare(self,term1,term2):
 
         threading.Thread(target=self.dis.spinner, args=("Analysing Tweets ",)).start()
@@ -101,7 +74,10 @@ class analyse:
             return term2
         return term1
 
-    
+    # Finds tweet in the database the have the search term handed to
+    # it in.
+    # It must be handed:
+    #     *serach term
     def searcher(self,term):
         
         threading.Thread(target=self.dis.spinner, args=("Searching Database ",)).start()
@@ -116,7 +92,12 @@ class analyse:
         return self.tweetList
 
 
-    #
+    # This method uses a word bank to find the sentiment of
+    # tweets, it is a faster simpler way for finding sentiment.
+    # It has been replaced by twitPollCompare() and the sent class
+    # as main sentiment analyse.
+    # It must be handed:
+    #     *Search term
     def tweetMeaning(self,term):
         self.dbout = self.searcher(term)
 
@@ -162,7 +143,8 @@ class analyse:
         self.dis.stop()
         return self.tweetList
         
-
+    # This method gets the poll data from the JSON file it is 
+    # stored in, ii then adds them up to get a total.
     def getPollData(self):
         with open("data/polls.json") as filedata:
             self.data = json.load(filedata)
@@ -186,7 +168,7 @@ class analyse:
         return self.pollDict
 
 
-    #This finds the most common hashtags used in the database
+    # This finds the most common hashtags used in the database
     def getHashtags(self):
         self.twitRes = analyse(self.db).tweetMeaning("brexit")
 
@@ -208,6 +190,9 @@ class analyse:
 
         self.dis.stop()
 
+    # this method hands the tweets to sentiment analyse then copares the
+    # results with the polls to find the difference. It outputs the 
+    # results to the user.
     def twitPollCompare(self):
         self.pollRes = analyse(self.db).getPollData()
         self.twitRes = analyse(self.db).searcher("brexit")
@@ -320,6 +305,8 @@ class analyse:
         "\n    Null:",self.nullcount,
         )
 
+    # This method gets the last analyse data from the JSON file
+    # it is stored in, then it outputs it to the user
     def outOldData(self):
         with open("data/results.json","r") as self.file:
             self.data = json.load(self.file)
@@ -342,70 +329,20 @@ class analyse:
         "\n    Null:",self.nullcount,
         )
 
-
-    # def test(self):
-    #     # self.out = analyse(self.db).searcher("")
-    #     # print (len(self.out))
-    #     self.tweetList = []
-    #     self.dbout = self.db.tweets.find({})
-    #     for self.i in self.dbout:
-    #         self.tweetList.append(self.i)
+    # Test method for testing things.
+    def test(self):
+        # self.out = analyse(self.db).searcher("")
+        # print (len(self.out))
+        self.tweetList = []
+        self.dbout = self.db.tweets.find({})
+        for self.i in self.dbout:
+            self.tweetList.append(self.i)
         
         
-    #     self.counter = 0
-    #     for self.i in self.tweetList:
-    #         if "brexit" not in self.i["tweet"].lower():
-    #             print(self.i["tweet"],"\n\n")
-    #             self.counter = self.counter + 1
-    #     print(len(self.tweetList))
-    #     print(self.counter)
-
-# go = analyse(mongo().conn())
-# output = display()
-# print(go.compare("#remain","#leave"))
-# go = analyse(mongo().conn())
-# go.nlktDownload()
-#go.tweetMeaning("#remain")
-# out = go.tweetMeaning("#remain")
-
-# print(out["view"])
-# print(out["badcount"])
-# print(out["goodcount"])
-# print(out["tweet"])
-
-# self.tweetDict = {
-#     "tweet":[],
-#     "procount":[],
-#     "negcount":[],
-#     "view":[]
-# }
-# for self.i in self.dbout:
-#     self.procounter = 0
-#     self.negcounter = 0
-#     for self.word in self.i["tweet"]:
-#         if self.word in self.wordList["good"]:
-#             self.procounter = + 1
-#         if self.word in self.wordList["bad"]:
-#             self.negcounter = + 1
-#         if self.word in self.wordList["swear"]:
-#             self.negcounter = + 1
-#     self.tweetDict["tweet"].append(self.i["tweet"])
-#     self.tweetDict["procounter"].append(self.procounter)
-#     self.tweetDict["negcounter"].append(self.procounter)
-#     if self.procounter > self.negcounter:
-#         self.tweetDict.append("pro")
-#     else:
-#         self.tweetDict.append("neg")
-
-
-# go = analyse(mongo().conn())
-# go.dataSetOpinions()
-
-# The top 3000 most frequent words should be obtained by:
-
-# all_words = nltk.FreqDist(w.lower() for w in movie_reviews.words())
-# word_features = [w for (w, c) in all_words.most_common(3000)]
-
-# If you use this as the feature, the accuracy will almost always be above 80 % and can occasionally hit 90 % .
-
-# And thanks for the video. I have really found some cool stuff in them.﻿
+        self.counter = 0
+        for self.i in self.tweetList:
+            if "brexit" not in self.i["tweet"].lower():
+                print(self.i["tweet"],"\n\n")
+                self.counter = self.counter + 1
+        print(len(self.tweetList))
+        print(self.counter)

@@ -21,13 +21,13 @@ from collection import collection
 from display import display
 
 
-#gets twitter api and mongo connection
-
+# main class that starts the program
 class Main:
     def __init__(self,api,db):
         self.api = api
         self.db = db
-
+    
+    # menu that allows the user to navigate the program
     def menu(self):
         sleep(1)
         anas.nltkDownload()
