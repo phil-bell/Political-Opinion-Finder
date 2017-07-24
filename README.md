@@ -1,14 +1,18 @@
 # Political Opinion Finder
 
-This is my 3rd year BSc Computer Science Degree Dissertation project. It involves a program that collects Tweets from twitter, analyses them using natual language to calcualte their political opinion so it can then be compared general populace opinions from pollster data.
+This is my 3rd year BSc Computer Science Degree Dissertation project. It involves a program that collects Tweets from twitter, analyses them using natural language to calculate their political opinion so it can then be compared general populace opinions from pollster data.
 
 ## Motivation
 
-The motivation of this project is to investigate into the difference between political opnions shared on online social media to the opinions of the general populace (opinions gathered from [pollsters data](https://github.com/philhabell/Political-Opinion-Finder/blob/master/data/polls.json)) by using natural language and big data analyse.
+The motivation of this project is to investigate into the difference between political opinions shared on online social media to the opinions of the general populace (opinions gathered from [pollsters data](https://github.com/philhabell/Political-Opinion-Finder/blob/master/data/polls.json)) by using natural language and big data analyse.
+
+## Findings
+
+The findings of the investigation can be found in the paper I wrote on [Academia](https://www.academia.edu/32934838/Do_the_political_opinions_shared_on_Social_Media_platform_Twitter_accurately_represent_the_political_opinions_of_the_general_populace). The TLDR was that majority of Twitter users did side with remain. I go into further detail on why in the paper.
 
 ## Installation
 
-Clone the repositary, install [Python 3](https://www.python.org/downloads/) and the following Python libraries using `pip install`:
+Clone the repo, install [Python 3](https://www.python.org/downloads/) and the following Python libraries using `pip install`:
 * `Tweepy` Twitter API library for accessing Twitter
 * `pymongo` MongoDB library for using MongoDB
 * `codecs` Encoding library for encoding the tweets
@@ -38,7 +42,7 @@ Then select what you would like to do from the menu presented to you.
 
 On first run the program will download the necessary [NLTK data](http://www.nltk.org/data.html) (This may take some time).
 It is advised to use `Gather tweets` option on first run so there are tweets in the database.
-The calulation of twitter vs poll opinion difference does take a long time (can be hours on a slower system).
+The calculation of twitter vs poll opinion difference does take a long time (can be hours on a slower system).
 
 ## Licence
 Copyright (C) 2017 Philip Bell - All Rights Reserved
