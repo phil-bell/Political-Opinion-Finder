@@ -19,7 +19,7 @@ Clone the repo, install [Python 3](https://www.python.org/downloads/) and the fo
 * `nltk` Natural language library for analysing meaning of tweets
 * `tqdm`
 
-Install the following from their `.whl` from the [Windows Binery](http://www.lfd.uci.edu/~gohlke/pythonlibs/) site using `pip install`:
+Install the following from their `.whl` from the [Windows Binary](http://www.lfd.uci.edu/~gohlke/pythonlibs/) site using `pip install`:
 * `numpy`
 * `scipy`
 * `scit_learn`
