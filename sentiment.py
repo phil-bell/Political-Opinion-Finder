@@ -21,10 +21,10 @@ class sent(ClassifierI):
     # of the result.
     # must be handed:
     #     *featured words
-    def clify(self, features):
+    def classify(self, features):
         self.votes = []
         for self.i in self._classifiers:
-            self.j = self.i.clify(features)
+            self.j = self.i.classify(features)
             self.votes.append(self.j)
         return mode(self.votes)
 
@@ -34,7 +34,7 @@ class sent(ClassifierI):
     def conf(self, features):
         self.votes = []
         for self.i in self._classifiers:
-            self.j = self.i.clify(features)
+            self.j = self.i.classify(features)
             self.votes.append(self.j)
 
         self.choice_votes = self.votes.count(mode(self.votes))
@@ -77,6 +77,6 @@ class sent(ClassifierI):
 
         vote = sent(ONB,MNB,BNB,LR,LSVC,SGDC)
         feats = sent().featureFind(text,wordFeat)
-        out = (voted.conf(feats))*100
+        out = (vote.conf(feats))*100
         # out = str(out)+"%"
-        return voted.clify(feats),out
+        return vote.classify(feats),out
